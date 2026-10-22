@@ -70,7 +70,7 @@ A speaker's audio enters the LiveKit SFU over WebRTC. One translation agent job 
 
 ## 3. Technology stack
 
-Every model and framework below permits commercial use; the recurring costs are GPU hosting, Stripe fees, an email provider, code-signing certificates and managed Kubernetes. Versions are not pinned here: CLAUDE.md requires Claude Code to pin the current stable release of each dependency at project start and record it in docs/versions.md.
+Every model and framework below permits commercial use; the recurring costs are GPU hosting, Whop platform fees, an email provider, code-signing certificates and managed Kubernetes. Versions are not pinned here: CLAUDE.md requires Claude Code to pin the current stable release of each dependency at project start and record it in docs/versions.md.
 
 | Layer | Technology | License | Notes |
 |---|---|---|---|
@@ -94,7 +94,7 @@ Every model and framework below permits commercial use; the recurring costs are 
 | ML serving | Ray Serve, PyTorch (current stable), CUDA | Apache 2.0 / BSD | Autoscaling stateless replicas, dynamic batching |
 | Containers / orchestration | Docker, Kubernetes (k3s for dev, managed k8s for prod) | Apache 2.0 | Separate node pools for GPU A, B, C and CPU |
 | Edge / CDN | Cloudflare | commercial, free tier | Web and API only; WebRTC media is not proxied |
-| Billing / email | Stripe; Resend or Postmark | commercial | Pay per use |
+| Billing / email | Whop (hosted checkout, memberships); Resend or Postmark | commercial | Whop platform fee per transaction; email pay per use |
 | Observability | OpenTelemetry, Prometheus, Grafana, Loki | Apache 2.0 / AGPL | Per-stage latency histograms |
 | CI/CD | GitHub Actions | commercial, free tier | Lint, test, build, deploy; Tauri builds signed for Mac and Windows |
 | Monorepo | pnpm workspaces + Turborepo | MIT | Shared TypeScript types |
@@ -457,7 +457,7 @@ Parlivo is a workspace product: every meeting belongs to a workspace, and the wo
 
 ### External providers (paid or free-tier)
 
-- Stripe for billing; plan limits enforced in the API.
+- Whop for billing (hosted checkout, membership model); plan limits are enforced in the API from verified Whop webhooks, never from the client.
 - Resend or Postmark for magic links, post-call summaries and guest deletion links.
 - Apple Developer Program and a Windows code-signing certificate for desktop releases.
 - Cloudflare R2 or MinIO for object storage; cloud KMS for secrets; a managed PostgreSQL.
