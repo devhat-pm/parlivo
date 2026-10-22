@@ -2,81 +2,157 @@
   "en": {
     "text": "The weather in Berlin is sunny today, and the meeting starts at ten.",
     "keywords": {
-      "mac": ["weather", "Berlin"],
-      "gpu": ["weather", "Berlin"],
-      "cpu": ["weather", "Berlin"]
+      "mac": [
+        "weather",
+        "Berlin"
+      ],
+      "gpu": [
+        "weather",
+        "Berlin"
+      ],
+      "cpu": [
+        "weather",
+        "Berlin"
+      ]
     }
   },
   "es": {
     "text": "Hoy hace sol en Madrid y la reunión empieza a las diez.",
     "keywords": {
-      "mac": ["Madrid", "reunión"],
-      "gpu": ["Madrid", "reunión"],
-      "cpu": ["reunión"]
+      "mac": [
+        "Madrid",
+        "reunión"
+      ],
+      "gpu": [
+        "Madrid",
+        "reunión"
+      ],
+      "cpu": [
+        "reunión"
+      ]
     }
   },
   "de": {
     "text": "Heute ist das Wetter in Berlin sonnig und das Treffen beginnt um zehn.",
     "keywords": {
-      "mac": ["Wetter", "Berlin"],
-      "gpu": ["Wetter", "Berlin"],
-      "cpu": ["Berlin", "Treffen"]
+      "mac": [
+        "Wetter",
+        "Berlin"
+      ],
+      "gpu": [
+        "Wetter",
+        "Berlin"
+      ],
+      "cpu": [
+        "Berlin",
+        "Treffen"
+      ]
     }
   },
   "fr": {
     "text": "Il fait beau à Paris aujourd'hui et la réunion commence à dix heures.",
     "keywords": {
-      "mac": ["Paris", "réunion"],
-      "gpu": ["Paris", "réunion"],
-      "cpu": ["réunion"]
+      "mac": [
+        "Paris",
+        "réunion"
+      ],
+      "gpu": [
+        "Paris",
+        "réunion"
+      ],
+      "cpu": [
+        "réunion"
+      ]
     }
   },
   "pt": {
     "text": "Hoje está sol em Lisboa e a reunião começa às dez horas.",
     "keywords": {
-      "mac": ["Lisboa", "reunião"],
-      "gpu": ["Lisboa", "reunião"],
-      "cpu": ["Lisboa"]
+      "mac": [
+        "Lisboa",
+        "reunião"
+      ],
+      "gpu": [
+        "Lisboa",
+        "reunião"
+      ],
+      "cpu": [
+        "Lisboa"
+      ]
     }
   },
   "it": {
     "text": "Oggi a Roma c'è il sole e la riunione inizia alle dieci.",
     "keywords": {
-      "mac": ["Roma", "riunione"],
-      "gpu": ["Roma", "riunione"],
-      "cpu": ["riunione"]
+      "mac": [
+        "Roma",
+        "riunione"
+      ],
+      "gpu": [
+        "Roma",
+        "riunione"
+      ],
+      "cpu": []
     }
   },
   "ar": {
     "text": "الجو مشمس في القاهرة اليوم والاجتماع يبدأ في الساعة العاشرة.",
     "keywords": {
-      "mac": ["القاهرة", "مشمس"],
-      "gpu": ["القاهرة", "مشمس"],
+      "mac": [
+        "القاهرة",
+        "مشمس"
+      ],
+      "gpu": [
+        "القاهرة",
+        "مشمس"
+      ],
       "cpu": []
     }
   },
   "hi": {
     "text": "आज दिल्ली में धूप है और बैठक दस बजे शुरू होगी।",
     "keywords": {
-      "mac": ["बजे", "शुरू"],
-      "gpu": ["बजे", "शुरू"],
+      "mac": [
+        "बजे",
+        "शुरू"
+      ],
+      "gpu": [
+        "बजे",
+        "शुरू"
+      ],
       "cpu": []
     }
   },
   "zh": {
     "text": "今天北京天气晴朗，会议十点开始。",
     "keywords": {
-      "mac": ["北京", "天气"],
-      "gpu": ["北京", "天气"],
-      "cpu": ["北京"]
+      "mac": [
+        "北京",
+        "天气"
+      ],
+      "gpu": [
+        "北京",
+        "天气"
+      ],
+      "cpu": [
+        "北京"
+      ]
     }
   },
   "ja": {
     "text": "今日の東京は晴れで、会議は十時に始まります。",
     "keywords": {
-      "mac": ["東京", "晴れ"],
-      "gpu": ["東京", "晴れ"],
-      "cpu": ["東京"]
+      "mac": [
+        "東京",
+        "晴れ"
+      ],
+      "gpu": [
+        "東京",
+        "晴れ"
+      ],
+      "cpu": [
+        "東京"
+      ]
     }
   }
 }

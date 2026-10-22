@@ -178,6 +178,8 @@ def _another_live_agent(room: rtc.Room) -> bool:
 
 def main() -> None:
     settings = load_settings()
+    # Metrics endpoint up before any job, so health checks and Prometheus see the worker.
+    setup_telemetry()
     # Dispatches rooms and recovers them after a crash (LiveKit does not reliably do it).
     start_in_background(settings.livekit_url, settings.livekit_api_key, settings.livekit_api_secret)
     agents_cli.run_app(

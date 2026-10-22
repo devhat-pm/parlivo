@@ -1,6 +1,6 @@
 # Speech fixtures
 
-One short clip per launch language (16 kHz, mono, 16-bit PCM WAV) for the STT tests (`services/stt/tests`) and the phase 1 benchmarks. `manifest.json` holds the sentence each clip speaks and the keywords each STT mode must recognise: `mac` and `gpu` run Whisper large-v3-turbo; `cpu` runs Whisper tiny in CI and is only expected to catch the listed words. An empty list means tiny is not reliable for that language, and the test only checks for a non-empty transcript.
+One short clip per launch language (16 kHz, mono, 16-bit PCM WAV) for the STT tests (`services/stt/tests`) and the phase 1 benchmarks. `manifest.json` holds the sentence each clip speaks and the keywords each STT mode must recognise: `mac` and `gpu` run Whisper large-v3-turbo; `cpu` runs Whisper tiny in CI and is only expected to catch the listed words. An empty list means tiny is not reliable for that language, and the test only checks for a non-empty transcript. Tiny's int8 output also differs between CPUs (x86 CI runners vs Apple Silicon), so a `cpu` keyword is listed only if it was recognised on both.
 
 Two helper files are not part of the per-language set:
 
