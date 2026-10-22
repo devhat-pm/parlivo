@@ -8,3 +8,7 @@ pnpm-lock.yaml
 ARCHITECTURE.md
 docs/assets
 **/src/generated
+
+# Playwright output (large; never formatted)
+**/test-results
+**/playwright-report

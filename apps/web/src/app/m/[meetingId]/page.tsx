@@ -1,15 +1,11 @@
-"use client";
+import { MeetingRoute } from "@/components/meeting-route";
 
-import dynamic from "next/dynamic";
-import { useParams } from "next/navigation";
-
-// Client-only: the meeting room needs WebRTC, media devices and session storage.
-const MeetingRoom = dynamic(
-  () => import("@/components/meeting-room").then((module) => module.MeetingRoom),
-  { ssr: false },
-);
+// A static export must pre-render at least one ID. The desktop app never links here; it uses
+// the query route /m?id=... (src/app/m/page.tsx). On the web, any ID still renders.
+export function generateStaticParams() {
+  return [{ meetingId: "_" }];
+}
 
 export default function MeetingPage() {
-  const { meetingId } = useParams<{ meetingId: string }>();
-  return <MeetingRoom meetingId={meetingId} />;
+  return <MeetingRoute />;
 }

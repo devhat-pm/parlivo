@@ -1,9 +1,10 @@
-"use client";
+import { LobbyRoute } from "@/components/lobby-route";
 
-import { useParams } from "next/navigation";
-import { Lobby } from "@/components/lobby";
+// See src/app/m/[meetingId]/page.tsx: the static export needs one pre-rendered ID.
+export function generateStaticParams() {
+  return [{ meetingId: "_" }];
+}
 
 export default function LobbyPage() {
-  const { meetingId } = useParams<{ meetingId: string }>();
-  return <Lobby meetingId={meetingId} />;
+  return <LobbyRoute />;
 }

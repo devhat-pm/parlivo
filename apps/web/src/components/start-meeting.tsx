@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { createMeeting } from "@/lib/api";
 import { ensureDevSession } from "@/stores/session";
+import { lobbyHref } from "@/lib/routes";
 
 /** Development entry point: create a meeting as the seeded user, or join one by ID. */
 export function StartMeeting() {
@@ -17,7 +18,7 @@ export function StartMeeting() {
     setBusy(true);
     try {
       const meeting = await createMeeting(await ensureDevSession());
-      router.push(`/m/${meeting.id}/lobby`);
+      router.push(lobbyHref(meeting.id));
     } catch (error) {
       void message.error(`Could not create a meeting: ${String(error)}`);
       setBusy(false);
@@ -35,7 +36,7 @@ export function StartMeeting() {
           value={meetingId}
           onChange={(event) => setMeetingId(event.target.value.trim())}
         />
-        <Button disabled={!meetingId} onClick={() => router.push(`/m/${meetingId}/lobby`)}>
+        <Button disabled={!meetingId} onClick={() => router.push(lobbyHref(meetingId))}>
           Join
         </Button>
       </Space.Compact>

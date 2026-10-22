@@ -17,6 +17,7 @@ import {
 } from "@/lib/diagnostics";
 import { useLobby } from "@/stores/lobby";
 import { ensureDevSession } from "@/stores/session";
+import { lobbyHref } from "@/lib/routes";
 import { ParticipantTile } from "./participant-tile";
 
 const RERENDER_EVENTS = [
@@ -55,7 +56,7 @@ export function MeetingRoom({ meetingId }: { meetingId: string }) {
   const lobbyConfirmed = lobby.confirmedForMeetingId === meetingId;
 
   useEffect(() => {
-    if (!lobbyConfirmed) router.replace(`/m/${meetingId}/lobby`);
+    if (!lobbyConfirmed) router.replace(lobbyHref(meetingId));
   }, [lobbyConfirmed, meetingId, router]);
 
   useEffect(() => {

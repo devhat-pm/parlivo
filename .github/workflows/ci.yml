@@ -25,6 +25,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm format:check
       - run: pnpm turbo run lint typecheck test build
+      - name: Desktop static export contains the query routes (A3)
+        run: pnpm --filter @parlivo/web build:desktop && pnpm --filter @parlivo/web test:export
 
   python:
     name: Python ${{ matrix.project }}
@@ -64,6 +66,15 @@ jobs:
         working-directory: apps/desktop/src-tauri
     steps:
       - uses: actions/checkout@v7.0.1
+      - uses: pnpm/action-setup@v6.1.0
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      # tauri::generate_context! checks at compile time that frontendDist (apps/web/out) exists.
+      - name: Build the static export the desktop app bundles
+        working-directory: .
+        run: pnpm install --frozen-lockfile && pnpm turbo run build --filter=@parlivo/web^... && pnpm --filter @parlivo/web build:desktop
       - name: Install Tauri Linux dependencies
         run: |
           sudo apt-get update

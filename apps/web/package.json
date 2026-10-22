@@ -9,7 +9,9 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "build:desktop": "PARLIVO_STATIC_EXPORT=1 next build",
+    "test:export": "node scripts/check-static-export.mjs"
   },
   "dependencies": {
     "@parlivo/audio": "workspace:*",

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { installDiagnosticsHandlers, reportEvent } from "@/lib/diagnostics";
 import { useLobby } from "@/stores/lobby";
+import { meetingHref } from "@/lib/routes";
 
 const languageOptions = LANGUAGES.map((language) => ({
   value: language.code,
@@ -88,7 +89,7 @@ export function Lobby({ meetingId }: { meetingId: string }) {
 
   function join() {
     saved.confirm(meetingId, { audioDeviceId, videoDeviceId, speakingLanguage, listeningLanguage });
-    router.push(`/m/${meetingId}`);
+    router.push(meetingHref(meetingId));
   }
 
   return (

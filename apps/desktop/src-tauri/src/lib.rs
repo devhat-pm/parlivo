@@ -3,8 +3,8 @@ pub fn app_name() -> &'static str {
     "Parlivo"
 }
 
-/// Placeholder shell: opens one window on the bundled placeholder page. The static
-/// Next.js export, deep-link OAuth, tray, hotkeys and updater arrive in later prompts.
+/// Opens one window on the bundled static export of apps/web (or the dev server in
+/// `tauri dev`). Deep-link OAuth, tray, hotkeys and updater arrive in later prompts.
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
