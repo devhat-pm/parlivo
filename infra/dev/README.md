@@ -24,6 +24,10 @@ pnpm dev:infra:reset    # stop and delete the Postgres and NATS volumes
 
 Postgres and Valkey use 5433 and 6380 rather than the defaults so they do not collide with other local projects.
 
+## LiveKit runs with host networking
+
+LiveKit uses `network_mode: host`, so its ports above are bound directly rather than forwarded. WebRTC through Docker's port forwarding does not work reliably: on Docker Desktop for macOS, ICE connects but the DTLS handshake times out. On Linux (including CI) host networking works out of the box. **On Docker Desktop (macOS or Windows), turn on Settings > Resources > Network > "Enable host networking" and restart Docker**; otherwise `ws://localhost:7880` is unreachable from the host even though the container reports healthy.
+
 ## LiveKit dev credentials
 
 `infra/dev/livekit.yaml` defines API key `devkey` with secret `parlivo-dev-secret-0123456789abcdef`. `apps/api` uses the same values by default (`LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET`, `LIVEKIT_URL=ws://localhost:7880`). LiveKit advertises the coturn server to clients through `rtc.turn_servers`.
