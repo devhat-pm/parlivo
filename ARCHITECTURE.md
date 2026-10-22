@@ -89,7 +89,7 @@ Every model and framework below permits commercial use; the recurring costs are 
 | Speech to text | faster-whisper (CTranslate2), Whisper large-v3-turbo, Silero VAD | MIT / MIT / MIT | Streaming, int8 on GPU |
 | Translation | Qwen3 4B int8 via vLLM (default); Qwen3 8B or Gemma 4 int4 with speculative decoding (upgrade path); MADLAD-400 3B for long-tail languages | Apache 2.0 / Apache 2.0 / Apache 2.0 | Final choice by nightly COMET benchmark per language pair; Gemma 4 moved to Apache 2.0 in April 2026 (verify sizes and terms at pin time); MADLAD cannot take glossary, context or formality prompts |
 | Text to speech | VoxCPM2 2B (primary, 30 languages, cloning); Chatterbox Multilingual (alternate, 23 languages); Kokoro 82M (fastest English) | Apache 2.0 / MIT / Apache 2.0 | VoxCPM2 specs (2B, 30 languages, Apache 2.0, April 2026) are from its Hugging Face model card; first-audio latency is unverified and is a phase 1 benchmark. Chatterbox Multilingual (MIT, 23 languages) is the confirmed fallback and covers every launch language. No permissive model covers Urdu voice yet |
-| AI LLM (batch) | Qwen3 32B or Gemma 4 31B (or 26B A4B) int4 via vLLM on pool C; one non-spot replica from phase 3 for the in-call assistant | Apache 2.0 | Summaries, RAG answers, extraction |
+| AI LLM (batch) | Gemma 4 26B A4B (primary; mixture-of-experts, 3.8B active) or Qwen3 32B (alternate), int4 via vLLM on pool C; one non-spot replica from phase 3 for the in-call assistant | Apache 2.0 | Summaries, RAG answers, extraction |
 | Embeddings | bge-m3 | MIT | Multilingual, 100+ languages |
 | ML serving | Ray Serve, PyTorch (current stable), CUDA | Apache 2.0 / BSD | Autoscaling stateless replicas, dynamic batching |
 | Containers / orchestration | Docker, Kubernetes (k3s for dev, managed k8s for prod) | Apache 2.0 | Separate node pools for GPU A, B, C and CPU |
@@ -169,7 +169,7 @@ Capacity is planned in streams, and the number of streams one GPU can carry is m
 |---|---|---|
 | Pool A (STT + TTS), one L4 | 10 concurrent active streams | Phase 1 gate: benchmark with synthetic speakers at p95 under 2 s; the real number replaces this figure in the doc |
 | Pool B (translation LLM), one L4 | 40 concurrent active streams | 4B int8; batching raises throughput but not per-stream speed, so the per-stream tok/s ceiling (about 65) is the phase 1 gate |
-| Pool C (batch AI), one L4 spot | Summaries, summary translation, RAG indexing and extraction for the launch cohort; a 27B int4 model processes roughly 2,000 to 3,000 input tok/s, so 100 hour-long calls ending together take several minutes | Summary p95 under 5 minutes after call end; spot reclaim delays, never drops, the job; the interactive in-call assistant (phase 3) runs on a separate non-spot replica with a priority queue |
+| Pool C (batch AI), one L4 spot | Summaries, summary translation, RAG indexing and extraction for the launch cohort; a 26B A4B int4 model processes roughly 2,000 to 3,000 input tok/s, so 100 hour-long calls ending together take several minutes | Summary p95 under 5 minutes after call end; spot reclaim delays, never drops, the job; the interactive in-call assistant (phase 3) runs on a separate non-spot replica with a priority queue |
 | LiveKit node, 4 vCPU | About 500 audio+video participants | LiveKit published benchmarks; verified in load test |
 | Core API pod | About 2,000 req/s | k6 |
 
@@ -269,7 +269,7 @@ packages/
 
 ## 7. AI features
 
-Translation gets users in the door; these features make Parlivo the system of record for a multilingual team and are the core of the seed pitch. They run on GPU pool C with one open-weight LLM (Gemma 4 31B or 26B A4B, or Qwen3 32B, at int4, Apache 2.0), separate from the live-translation pools, so they never affect call latency; their cost is one spot GPU at launch plus one non-spot replica for the in-call assistant from phase 3.
+Translation gets users in the door; these features make Parlivo the system of record for a multilingual team and are the core of the seed pitch. They run on GPU pool C with one open-weight LLM (Gemma 4 26B A4B as primary, a mixture-of-experts model with 3.8B active parameters chosen because active-parameter decode speed on an L4 matters more than dense quality; Qwen3 32B as alternate; both int4, Apache 2.0), separate from the live-translation pools, so they never affect call latency; their cost is one spot GPU at launch plus one non-spot replica for the in-call assistant from phase 3.
 
 | Feature | What the user sees | How it works | Phase |
 |---|---|---|---|

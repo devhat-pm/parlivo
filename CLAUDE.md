@@ -22,7 +22,7 @@ Also: never commit secrets (`.env.example` only) or model weights; never put aud
 | Events            | NATS JetStream, durable transcript and meeting events only, never audio                                                                                     |
 | GPU pool A        | Stateless Ray Serve: faster-whisper (Whisper large-v3-turbo int8) + Silero VAD; TTS (VoxCPM2 primary, Chatterbox Multilingual fallback, Kokoro for English) |
 | GPU pool B        | Translation LLM on vLLM: Qwen3 4B int8 default; MADLAD-400 3B for long-tail languages                                                                       |
-| GPU pool C        | Batch AI LLM on vLLM (Qwen3 32B or Gemma 4 31B / 26B A4B, int4): summaries, RAG, extraction                                                                 |
+| GPU pool C        | Batch AI LLM on vLLM (Gemma 4 26B A4B primary, Qwen3 32B alternate, int4): summaries, RAG, extraction, in-call assistant                                    |
 | AI service        | Python FastAPI; bge-m3 embeddings in pgvector                                                                                                               |
 | Platform          | Kubernetes (k3s dev, managed prod), Helm, Terraform, Cloudflare (web + API only), OpenTelemetry, Prometheus, Grafana, Loki, GitHub Actions                  |
 
