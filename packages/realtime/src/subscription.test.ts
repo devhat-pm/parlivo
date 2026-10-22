@@ -58,6 +58,17 @@ describe("decideSubscription", () => {
     expect(decideSubscription(track, { ...me, listeningLanguage: "de" }).subscribe).toBe(true);
   });
 
+  it("treats the phase 1 echo as every language, except for my own speech", () => {
+    const annaEcho = { trackName: translatedTrackName(ANNA, "echo"), publisherIdentity: AGENT };
+    expect(decideSubscription(annaEcho, me)).toEqual({ subscribe: true, kind: "translated" });
+    expect(decideSubscription(annaEcho, { ...me, listeningLanguage: "ja" }).subscribe).toBe(true);
+    const myEcho = { trackName: translatedTrackName(ME, "echo"), publisherIdentity: AGENT };
+    expect(decideSubscription(myEcho, me)).toEqual({
+      subscribe: false,
+      reason: "own-speech-translation",
+    });
+  });
+
   it("never subscribes to its own published tracks", () => {
     expect(decideSubscription({ trackName: "camera", publisherIdentity: ME }, me)).toEqual({
       subscribe: false,
