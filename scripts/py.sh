@@ -3,7 +3,7 @@
 # Usage: pnpm py lint | typecheck | test | build | sync
 set -euo pipefail
 
-PROJECTS=(services/agent services/stt services/translate services/tts services/ai tests/bench)
+PROJECTS=(packages/schemas/python services/agent services/stt services/translate services/tts services/ai tests/bench)
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
 case "${1:-}" in

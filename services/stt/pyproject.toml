@@ -1,11 +1,28 @@
 [project]
 name = "parlivo-stt"
 version = "0.0.0"
-description = "Stateless speech-to-text service on Ray Serve (faster-whisper + Silero VAD)"
+description = "Stateless speech-to-text on Ray Serve: faster-whisper (cpu, gpu) or mlx-whisper (mac), Silero VAD"
 readme = "README.md"
 requires-python = "==3.12.*"
 dependencies = [
+    "fastapi==0.159.1",
+    "faster-whisper==1.2.1",
+    "numpy==2.5.4",
+    "parlivo-schemas",
     "pydantic==2.14.1",
+    "ray[serve]==2.59.0",
+    "uvicorn==0.54.0",
+]
+
+[project.optional-dependencies]
+# STT_MODE=mac: Whisper on Apple Silicon via MLX (Metal). See ADR 0007.
+mac = [
+    "mlx-whisper==0.4.3; sys_platform == 'darwin' and platform_machine == 'arm64'",
+]
+# STT_MODE=gpu: CUDA 12 / cuDNN 9 runtime libraries for CTranslate2 on the L4 box.
+gpu = [
+    "nvidia-cublas-cu12==12.9.2.10; sys_platform == 'linux'",
+    "nvidia-cudnn-cu12==9.27.0.42; sys_platform == 'linux'",
 ]
 
 [project.scripts]
@@ -13,6 +30,7 @@ parlivo-stt = "parlivo_stt.main:main"
 
 [dependency-groups]
 dev = [
+    "httpx==0.28.1",
     "mypy==2.4.0",
     "pytest==9.1.1",
     "ruff==0.17.1",
@@ -25,13 +43,25 @@ build-backend = "uv_build"
 [tool.uv.build-backend]
 module-name = "parlivo_stt"
 
+[tool.uv.sources]
+parlivo-schemas = { path = "../../packages/schemas/python", editable = true }
+
 [tool.ruff]
 extend = "../../packages/config/python/ruff.toml"
 
 [tool.mypy]
 strict = true
 files = ["src", "tests"]
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = ["faster_whisper.*", "mlx_whisper.*", "ray.*", "ctranslate2.*"]
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra --strict-markers"
+markers = [
+    "model: loads a Whisper model (downloads weights on first run)",
+    "gpu: needs STT_MODE=gpu on a CUDA machine",
+]

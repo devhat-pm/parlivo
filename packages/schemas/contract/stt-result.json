@@ -1,0 +1,14 @@
+{
+  "text": "The weather in Berlin is sunny today.",
+  "language": "en",
+  "isFinal": true,
+  "words": [
+    { "word": "The", "startMs": 0, "endMs": 180, "probability": 0.98 },
+    { "word": "weather", "startMs": 180, "endMs": 520, "probability": 0.95 }
+  ],
+  "confidence": 0.96,
+  "audioMs": 2900,
+  "processingMs": 142.5,
+  "mode": "gpu",
+  "model": "large-v3-turbo"
+}

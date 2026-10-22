@@ -1,8 +1,0 @@
-# GPU runtime stack for this service, pinned exactly (see docs/versions.md).
-# Linux + CUDA only. Installed in the GPU Docker image, not in CI or on macOS.
-# Model weights are never installed by this file.
-faster-whisper==1.2.1
-ctranslate2==4.8.3
-silero-vad==6.2.3
-torch==2.14.1
-ray[serve]==2.59.0

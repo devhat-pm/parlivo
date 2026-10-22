@@ -1,0 +1,11 @@
+{
+  "type": "caption",
+  "version": 1,
+  "speakerId": "46eefc86-07d3-46d0-891b-e8c7d3181093",
+  "clauseId": "46eefc86-07d3-46d0-891b-e8c7d3181093:3",
+  "language": "de",
+  "text": "Heute ist das Wetter in Berlin sonnig.",
+  "isFinal": true,
+  "startMs": 12040,
+  "endMs": 14820
+}
