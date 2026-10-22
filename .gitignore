@@ -1,0 +1,58 @@
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.swp
+
+# Env and secrets
+.env
+.env.*
+!.env.example
+
+# Node / TypeScript
+node_modules/
+dist/
+build/
+out/
+.next/
+.turbo/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+npm-debug.log*
+pnpm-debug.log*
+playwright-report/
+test-results/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+
+# Rust / Tauri
+target/
+apps/desktop/src-tauri/gen/
+
+# Model weights and caches (never commit)
+models/
+weights/
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.gguf
+*.ct2
+.cache/huggingface/
+
+# Source document (ARCHITECTURE.md is the source of truth)
+*.docx
