@@ -26,3 +26,5 @@ Template:
 | [0004](0004-pool-c-gemma-4-26b-a4b.md)                    | Pool C batch LLM: Gemma 4 26B A4B primary, Qwen3 32B alternate                      |
 | [0005](0005-chatterbox-separate-image.md)                 | Chatterbox runs in its own image behind an internal HTTP streaming endpoint         |
 | [0006](0006-api-auth-and-database-libraries.md)           | API dependencies for phase 0: jose for access tokens, Prisma's pg driver adapter    |
+| [0007](0007-stt-modes-mlx-whisper-for-mac.md)             | Three STT modes behind one contract; mlx-whisper for Mac development                |
+| [0008](0008-agent-explicit-dispatch-and-reconciler.md)    | Agent recovery by heartbeat and explicit dispatch; agent dependencies               |
