@@ -2,5 +2,5 @@
 # Linux + CUDA only. Installed in the GPU Docker image, not in CI or on macOS.
 # Model weights are never installed by this file.
 vllm==0.32.0
-torch==2.13.0
+torch==2.14.1
 ray[serve]==2.59.0
