@@ -5,9 +5,17 @@ description = "LiveKit Agents translation agent: VAD, pipeline orchestration, tr
 readme = "README.md"
 requires-python = "==3.12.*"
 dependencies = [
-    "pydantic==2.14.1",
+    "aiohttp==3.14.5",
     "livekit-agents==1.8.8",
+    "livekit-api==1.2.2",
+    "livekit-plugins-silero==1.8.8",
     "nats-py==2.16.0",
+    "numpy==2.5.4",
+    "opentelemetry-api==1.45.1",
+    "opentelemetry-exporter-prometheus==0.66b1",
+    "opentelemetry-sdk==1.45.1",
+    "parlivo-schemas",
+    "pydantic==2.14.1",
 ]
 
 [project.scripts]
@@ -16,6 +24,7 @@ parlivo-agent = "parlivo_agent.main:main"
 [dependency-groups]
 dev = [
     "mypy==2.4.0",
+    "pytest-asyncio==1.4.0",
     "pytest==9.1.1",
     "ruff==0.17.1",
 ]
@@ -27,13 +36,22 @@ build-backend = "uv_build"
 [tool.uv.build-backend]
 module-name = "parlivo_agent"
 
+[tool.uv.sources]
+parlivo-schemas = { path = "../../packages/schemas/python", editable = true }
+
 [tool.ruff]
 extend = "../../packages/config/python/ruff.toml"
 
 [tool.mypy]
 strict = true
 files = ["src", "tests"]
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = ["livekit.plugins.*", "opentelemetry.exporter.*"]
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-ra --strict-markers"
+asyncio_mode = "auto"

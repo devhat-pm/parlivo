@@ -1,0 +1,350 @@
+{
+  "uid": "parlivo-phase1",
+  "title": "Parlivo phase 1: clause to echo",
+  "tags": ["parlivo"],
+  "timezone": "browser",
+  "schemaVersion": 41,
+  "version": 1,
+  "refresh": "5s",
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Clause to echo p50 (5 min)",
+      "description": "Last voiced frame of a clause to the first echo frame published. Phase 1 stand-in for glass-to-ear (ARCHITECTURE.md section 4).",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "parlivo-prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 6,
+        "h": 4
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": ["lastNotNull"]
+        },
+        "colorMode": "value"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "parlivo-prometheus"
+          },
+          "expr": "histogram_quantile(0.5, sum by (le) (rate(parlivo_clause_to_echo_milliseconds_bucket[5m])))"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "stat",
+      "title": "Clause to echo p95 (5 min)",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "parlivo-prometheus"
+      },
+      "gridPos": {
+        "x": 6,
+        "y": 0,
+        "w": 6,
+        "h": 4
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": ["lastNotNull"]
+        },
+        "colorMode": "value"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "parlivo-prometheus"
+          },
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(parlivo_clause_to_echo_milliseconds_bucket[5m])))"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "stat",
+      "title": "STT final p95 (5 min)",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "parlivo-prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 6,
+        "h": 4
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": ["lastNotNull"]
+        },
+        "colorMode": "value"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "parlivo-prometheus"
+          },
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(parlivo_stt_request_milliseconds_bucket{kind=\"final\"}[5m])))"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "stat",
+      "title": "Clauses per minute",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "parlivo-prometheus"
+      },
+      "gridPos": {
+        "x": 18,
+        "y": 0,
+        "w": 6,
+        "h": 4
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "options": {
+        "reduceOptions": {
+          "calcs": ["lastNotNull"]
+        },
+        "colorMode": "value"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "parlivo-prometheus"
+          },
+          "expr": "sum(rate(parlivo_clauses_total[1m])) * 60"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "timeseries",
+      "title": "Clause to echo latency",
+      "description": "Budget: p50 1.3 s, p95 2.0 s in-region once translation and TTS are added.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "parlivo-prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 4,
+        "w": 24,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "parlivo-prometheus"
+          },
+          "expr": "histogram_quantile(0.5, sum by (le) (rate(parlivo_clause_to_echo_milliseconds_bucket[1m])))",
+          "legendFormat": "p50"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "parlivo-prometheus"
+          },
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(parlivo_clause_to_echo_milliseconds_bucket[1m])))",
+          "legendFormat": "p95"
+        },
+        {
+          "refId": "C",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "parlivo-prometheus"
+          },
+          "expr": "histogram_quantile(0.99, sum by (le) (rate(parlivo_clause_to_echo_milliseconds_bucket[1m])))",
+          "legendFormat": "p99"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "timeseries",
+      "title": "STT request latency (agent side)",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "parlivo-prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 12,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "parlivo-prometheus"
+          },
+          "expr": "histogram_quantile(0.5, sum by (le, kind) (rate(parlivo_stt_request_milliseconds_bucket[1m])))",
+          "legendFormat": "p50 {{kind}}"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "parlivo-prometheus"
+          },
+          "expr": "histogram_quantile(0.95, sum by (le, kind) (rate(parlivo_stt_request_milliseconds_bucket[1m])))",
+          "legendFormat": "p95 {{kind}}"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "type": "timeseries",
+      "title": "Clauses by finalisation reason",
+      "description": "silence = 300 ms pause; punctuation = 150 ms pause after a punctuated partial; max_length = forced split at 7 s.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "parlivo-prometheus"
+      },
+      "gridPos": {
+        "x": 12,
+        "y": 12,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "parlivo-prometheus"
+          },
+          "expr": "sum by (reason) (rate(parlivo_clauses_total[1m])) * 60",
+          "legendFormat": "{{reason}}"
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "type": "timeseries",
+      "title": "Clause to echo p95 by language",
+      "description": "",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "parlivo-prometheus"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 20,
+        "w": 24,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        }
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "parlivo-prometheus"
+          },
+          "expr": "histogram_quantile(0.95, sum by (le, language) (rate(parlivo_clause_to_echo_milliseconds_bucket[5m])))",
+          "legendFormat": "{{language}}"
+        }
+      ]
+    }
+  ]
+}

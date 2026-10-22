@@ -1,6 +1,6 @@
 # infra/dev
 
-CPU-only local infrastructure (ARCHITECTURE.md section 8): LiveKit, coturn, PostgreSQL 18 with pgvector, Valkey and NATS with JetStream. Image versions are pinned in `docs/versions.md`. Everything here is for development only; the keys and passwords are public.
+CPU-only local infrastructure (ARCHITECTURE.md section 8): LiveKit, coturn, PostgreSQL 18 with pgvector, Valkey, NATS with JetStream, Prometheus and Grafana. Image versions are pinned in `docs/versions.md`. Everything here is for development only; the keys and passwords are public.
 
 ```bash
 pnpm dev:infra          # start everything and wait until every health check passes
@@ -21,6 +21,8 @@ pnpm dev:infra:reset    # stop and delete the Postgres and NATS volumes
 | Valkey                              | 6380 (override with `PARLIVO_VALKEY_PORT`) | `redis://localhost:6380`                                                                                |
 | NATS client                         | 4222                                       | JetStream enabled, data in a volume                                                                     |
 | NATS monitoring                     | 8222                                       | `/healthz?js-enabled-only=true`                                                                         |
+| Prometheus                          | 9090                                       | Host network; scrapes the agent on `localhost:9464`                                                     |
+| Grafana                             | 3300                                       | Anonymous admin; dashboard "Parlivo phase 1: clause to echo" (`infra/dev/grafana/dashboards`)           |
 
 Postgres and Valkey use 5433 and 6380 rather than the defaults so they do not collide with other local projects.
 
@@ -34,10 +36,12 @@ LiveKit uses `network_mode: host`, so its ports above are bound directly rather 
 
 ## Health checks
 
-| Service  | Check                                                                                         |
-| -------- | --------------------------------------------------------------------------------------------- |
-| livekit  | `GET http://127.0.0.1:7880/` returns `OK`                                                     |
-| coturn   | `turnutils_stunclient 127.0.0.1` gets a STUN binding response (the image has no curl or wget) |
-| postgres | `pg_isready`                                                                                  |
-| valkey   | `valkey-cli ping`                                                                             |
-| nats     | `GET /healthz?js-enabled-only=true` on 8222                                                   |
+| Service    | Check                                                                                         |
+| ---------- | --------------------------------------------------------------------------------------------- |
+| livekit    | `GET http://127.0.0.1:7880/` returns `OK`                                                     |
+| coturn     | `turnutils_stunclient 127.0.0.1` gets a STUN binding response (the image has no curl or wget) |
+| postgres   | `pg_isready`                                                                                  |
+| valkey     | `valkey-cli ping`                                                                             |
+| nats       | `GET /healthz?js-enabled-only=true` on 8222                                                   |
+| prometheus | `GET /-/ready`                                                                                |
+| grafana    | `GET /api/health`                                                                             |
