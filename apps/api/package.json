@@ -4,20 +4,29 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "generate": "prisma generate",
+    "build": "prisma generate && tsc -p tsconfig.build.json",
     "start": "node dist/main.js",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "typecheck": "prisma generate && tsc --noEmit",
+    "test": "prisma generate && vitest run",
+    "test:integration": "prisma generate && vitest run --config vitest.integration.config.ts",
+    "db:migrate": "prisma migrate deploy",
+    "db:migrate:dev": "prisma migrate dev",
+    "db:seed": "node dist/seed.js"
   },
   "dependencies": {
     "@nestjs/common": "catalog:",
     "@nestjs/core": "catalog:",
     "@nestjs/platform-express": "catalog:",
+    "@parlivo/schemas": "workspace:*",
+    "@prisma/adapter-pg": "catalog:",
     "@prisma/client": "catalog:",
+    "jose": "catalog:",
     "livekit-server-sdk": "catalog:",
     "reflect-metadata": "catalog:",
-    "rxjs": "catalog:"
+    "rxjs": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@nestjs/testing": "catalog:",

@@ -1,5 +1,24 @@
-import { Module } from "@nestjs/common";
+import { type DynamicModule, Module } from "@nestjs/common";
+import { AuthController } from "./auth/auth.controller.js";
+import { AuthGuard } from "./auth/auth.guard.js";
+import { APP_CONFIG, type AppConfig } from "./config.js";
+import { MeetingsController } from "./meetings/meetings.controller.js";
+import { MeetingsService } from "./meetings/meetings.service.js";
+import { PrismaService } from "./prisma/prisma.service.js";
 
-/** Root module. Auth, workspaces, guests, LiveKit token minting and billing arrive in later prompts. */
+/** Root module. Built from an explicit config so tests can inject their own. */
 @Module({})
-export class AppModule {}
+export class AppModule {
+  static forConfig(config: AppConfig): DynamicModule {
+    return {
+      module: AppModule,
+      controllers: [AuthController, MeetingsController],
+      providers: [
+        { provide: APP_CONFIG, useValue: config },
+        PrismaService,
+        AuthGuard,
+        MeetingsService,
+      ],
+    };
+  }
+}

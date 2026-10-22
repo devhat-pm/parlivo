@@ -60,6 +60,8 @@ Where pins live: TypeScript in the `catalog:` block of `pnpm-workspace.yaml`; Py
 | rxjs                     | 7.8.2   | 2025-02-22 | [link](https://www.npmjs.com/package/rxjs/v/7.8.2)                      | apps/api         |                                                                                                                              |
 | prisma                   | 7.10.1  | 2026-10-15 | [link](https://www.npmjs.com/package/prisma/v/7.10.1)                   | apps/api         | The npm `latest` tag points at 8.0.0-rc.25 (a release candidate). Pinned the newest stable, 7.10.1, matching @prisma/client. |
 | @prisma/client           | 7.10.1  | 2026-10-15 | [link](https://www.npmjs.com/package/@prisma/client/v/7.10.1)           | apps/api         |                                                                                                                              |
+| @prisma/adapter-pg       | 7.10.1  | 2026-10-15 | [link](https://www.npmjs.com/package/@prisma/adapter-pg/v/7.10.1)       | apps/api         | Prisma 7 connects through a driver adapter (ADR 0006)                                                                        |
+| jose                     | 6.2.13  | 2026-10-20 | [link](https://www.npmjs.com/package/jose/v/6.2.13)                     | apps/api         | Access-token signing and verification (ADR 0006)                                                                             |
 | zod                      | 4.6.7   | 2026-10-12 | [link](https://www.npmjs.com/package/zod/v/4.6.7)                       | packages/schemas |                                                                                                                              |
 
 ## Python services

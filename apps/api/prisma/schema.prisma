@@ -1,0 +1,137 @@
+// Core entities from ARCHITECTURE.md section 10 (Workspace, Member, Guest, Meeting,
+// Participant) plus User, which Member references. Transcript segments, artifacts and
+// voice profiles arrive with the features that need them.
+
+generator client {
+  provider            = "prisma-client"
+  output              = "../src/generated/prisma"
+  moduleFormat        = "esm"
+  importFileExtension = "js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Plan {
+  free
+  pro
+  enterprise
+}
+
+/// Data residency region. Single EU region (Frankfurt) at launch; US and Middle East in phase 4.
+enum Region {
+  eu
+}
+
+enum MemberRole {
+  owner
+  admin
+  member
+}
+
+enum MeetingStatus {
+  scheduled
+  live
+  ended
+}
+
+model User {
+  id        String   @id @default(uuid()) @db.Uuid
+  email     String   @unique
+  name      String
+  createdAt DateTime @default(now()) @map("created_at")
+  members   Member[]
+
+  @@map("users")
+}
+
+/// The tenant and data controller.
+model Workspace {
+  id                String    @id @default(uuid()) @db.Uuid
+  name              String
+  plan              Plan      @default(free)
+  region            Region    @default(eu)
+  retentionDays     Int       @default(90) @map("retention_days")
+  transcriptStorage Boolean   @default(true) @map("transcript_storage")
+  glossary          Json      @default("[]")
+  ssoConfig         Json?     @map("sso_config")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  members           Member[]
+  meetings          Meeting[]
+
+  @@map("workspaces")
+}
+
+/// A user's membership of a workspace. A user can belong to several workspaces.
+model Member {
+  id             String        @id @default(uuid()) @db.Uuid
+  userId         String        @map("user_id") @db.Uuid
+  workspaceId    String        @map("workspace_id") @db.Uuid
+  role           MemberRole    @default(member)
+  createdAt      DateTime      @default(now()) @map("created_at")
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace      Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  hostedMeetings Meeting[]
+  participants   Participant[]
+
+  @@unique([userId, workspaceId])
+  @@index([workspaceId])
+  @@map("members")
+}
+
+/// Joins one meeting by link; no account; host approval from the waiting room.
+model Guest {
+  id                String        @id @default(uuid()) @db.Uuid
+  displayName       String        @map("display_name")
+  email             String?
+  meetingId         String        @map("meeting_id") @db.Uuid
+  consentAcceptedAt DateTime      @map("consent_accepted_at")
+  createdAt         DateTime      @default(now()) @map("created_at")
+  meeting           Meeting       @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  participants      Participant[]
+
+  @@index([meetingId])
+  @@map("guests")
+}
+
+/// Pinned to the workspace region.
+model Meeting {
+  id               String        @id @default(uuid()) @db.Uuid
+  workspaceId      String        @map("workspace_id") @db.Uuid
+  hostMemberId     String        @map("host_member_id") @db.Uuid
+  /// Random 12-character room ID (ARCHITECTURE.md section 9); also the LiveKit room name.
+  roomId           String        @unique @map("room_id") @db.VarChar(12)
+  region           Region
+  scheduledAt      DateTime?     @map("scheduled_at")
+  languagesPresent String[]      @default([]) @map("languages_present")
+  recording        Boolean       @default(false)
+  status           MeetingStatus @default(scheduled)
+  createdAt        DateTime      @default(now()) @map("created_at")
+  workspace        Workspace     @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  host             Member        @relation(fields: [hostMemberId], references: [id], onDelete: Restrict)
+  guests           Guest[]
+  participants     Participant[]
+
+  @@index([workspaceId])
+  @@map("meetings")
+}
+
+/// Drives which translated tracks exist. Exactly one of memberId and guestId is set
+/// (enforced by a CHECK constraint in the migration).
+model Participant {
+  id                String    @id @default(uuid()) @db.Uuid
+  meetingId         String    @map("meeting_id") @db.Uuid
+  memberId          String?   @map("member_id") @db.Uuid
+  guestId           String?   @map("guest_id") @db.Uuid
+  speakingLanguage  String    @map("speaking_language") @db.VarChar(8)
+  listeningLanguage String    @map("listening_language") @db.VarChar(8)
+  joinedAt          DateTime  @default(now()) @map("joined_at")
+  leftAt            DateTime? @map("left_at")
+  meeting           Meeting   @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  member            Member?   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  guest             Guest?    @relation(fields: [guestId], references: [id], onDelete: Cascade)
+
+  @@index([meetingId])
+  @@map("participants")
+}

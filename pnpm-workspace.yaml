@@ -32,6 +32,8 @@ catalog:
   rxjs: 7.8.2
   prisma: 7.10.1
   "@prisma/client": 7.10.1
+  "@prisma/adapter-pg": 7.10.1
+  jose: 6.2.13
   # Schemas
   zod: 4.6.7
   # Tooling
