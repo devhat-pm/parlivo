@@ -42,7 +42,10 @@ export function devLogin(): Promise<DevLoginResponse> {
   return post("/auth/dev-login", devLoginResponseSchema, {});
 }
 
-export function createMeeting(accessToken: string, body: CreateMeetingRequest = {}): Promise<Meeting> {
+export function createMeeting(
+  accessToken: string,
+  body: CreateMeetingRequest = {},
+): Promise<Meeting> {
   return post("/meetings", meetingSchema, body, accessToken);
 }
 

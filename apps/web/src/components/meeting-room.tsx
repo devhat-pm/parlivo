@@ -118,7 +118,9 @@ export function MeetingRoom({ meetingId }: { meetingId: string }) {
   async function toggleScreenShare() {
     if (!room) return;
     try {
-      await room.localParticipant.setScreenShareEnabled(!room.localParticipant.isScreenShareEnabled);
+      await room.localParticipant.setScreenShareEnabled(
+        !room.localParticipant.isScreenShareEnabled,
+      );
       setScreenShareError(null);
     } catch (cause) {
       setScreenShareError(String(cause));

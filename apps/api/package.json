@@ -4,13 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "postinstall": "prisma generate",
     "generate": "prisma generate",
-    "build": "prisma generate && tsc -p tsconfig.build.json",
+    "build": "tsc -p tsconfig.build.json",
     "start": "node dist/main.js",
     "lint": "eslint .",
-    "typecheck": "prisma generate && tsc --noEmit",
-    "test": "prisma generate && vitest run",
-    "test:integration": "prisma generate && vitest run --config vitest.integration.config.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
     "db:migrate": "prisma migrate deploy",
     "db:migrate:dev": "prisma migrate dev",
     "db:seed": "node dist/seed.js"

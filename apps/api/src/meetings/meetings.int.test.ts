@@ -37,6 +37,14 @@ afterAll(async () => {
   await app.close();
 });
 
+describe("GET /health", () => {
+  it("responds ok without auth", async () => {
+    const response = await fetch(`${baseUrl}/health`);
+    expect(response.status).toBe(200);
+    expect(await response.json()).toEqual({ status: "ok" });
+  });
+});
+
 describe("POST /auth/dev-login", () => {
   it("rejects an unknown email", async () => {
     const response = await api("/auth/dev-login", {

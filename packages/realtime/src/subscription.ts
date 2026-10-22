@@ -29,7 +29,8 @@ export function decideSubscription(
   track: RemoteTrackInfo,
   listener: LocalListener,
 ): SubscriptionDecision {
-  if (track.publisherIdentity === listener.identity) return { subscribe: false, reason: "own-track" };
+  if (track.publisherIdentity === listener.identity)
+    return { subscribe: false, reason: "own-track" };
   const translated = parseTranslatedTrackName(track.trackName);
   if (!translated) return { subscribe: true, kind: "original" };
   if (translated.speakerId === listener.identity) {

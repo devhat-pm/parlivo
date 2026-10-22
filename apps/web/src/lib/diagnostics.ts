@@ -22,7 +22,11 @@ export interface MeetingSnapshot {
   }[];
 }
 
-export function snapshot(room: Room, micLevel: number, screenShareError: string | null): MeetingSnapshot {
+export function snapshot(
+  room: Room,
+  micLevel: number,
+  screenShareError: string | null,
+): MeetingSnapshot {
   const subscribed = (identity: string, source: Track.Source) => {
     const publication = room.remoteParticipants.get(identity)?.getTrackPublication(source);
     return Boolean(publication?.isSubscribed && publication.track);

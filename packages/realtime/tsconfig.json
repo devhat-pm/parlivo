@@ -3,15 +3,7 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "dist",
-    "lib": [
-      "ES2023",
-      "DOM",
-      "DOM.Iterable"
-    ]
+    "lib": ["ES2023", "DOM", "DOM.Iterable"]
   },
-  "include": [
-    "src",
-    "test",
-    "vitest.config.ts"
-  ]
+  "include": ["src", "test", "vitest.config.ts"]
 }
