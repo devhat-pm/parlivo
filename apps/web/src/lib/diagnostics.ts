@@ -58,3 +58,40 @@ export function report(data: MeetingSnapshot): void {
     body: JSON.stringify(data),
   }).catch(() => undefined);
 }
+
+/** Report a lifecycle step or error before a room exists (spikes only; no-op otherwise). */
+export function reportEvent(event: string, detail?: unknown): void {
+  if (!DIAGNOSTICS_URL) return;
+  void fetch(DIAGNOSTICS_URL, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      at: new Date().toISOString(),
+      event,
+      detail: detail instanceof Error ? `${detail.name}: ${detail.message}` : detail,
+      userAgent: navigator.userAgent,
+    }),
+  }).catch(() => undefined);
+}
+
+let globalHandlersInstalled = false;
+
+/** Forward uncaught errors, console errors and console warnings to the diagnostics receiver. */
+export function installDiagnosticsHandlers(): void {
+  if (!DIAGNOSTICS_URL || globalHandlersInstalled) return;
+  globalHandlersInstalled = true;
+  window.addEventListener("error", (event) => reportEvent("window.error", event.message));
+  window.addEventListener("unhandledrejection", (event) =>
+    reportEvent("unhandledrejection", String(event.reason)),
+  );
+  for (const level of ["error", "warn"] as const) {
+    // Wrapping (not calling) console methods is the point of this diagnostics hook.
+    // eslint-disable-next-line no-console
+    const original = console[level].bind(console);
+    // eslint-disable-next-line no-console
+    console[level] = (...args: unknown[]) => {
+      reportEvent(`console.${level}`, args.map(String).join(" ").slice(0, 2000));
+      original(...args);
+    };
+  }
+}

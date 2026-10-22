@@ -6,9 +6,15 @@ import { participantMetadataSchema } from "@parlivo/schemas";
 import { Alert, Button, Col, Layout, Row, Space, Spin, Tag } from "antd";
 import { type Participant, type Room, RoomEvent, Track } from "livekit-client";
 import { useRouter } from "next/navigation";
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { joinMeeting } from "@/lib/api";
-import { DIAGNOSTICS_URL, report, snapshot } from "@/lib/diagnostics";
+import {
+  DIAGNOSTICS_URL,
+  installDiagnosticsHandlers,
+  report,
+  reportEvent,
+  snapshot,
+} from "@/lib/diagnostics";
 import { useLobby } from "@/stores/lobby";
 import { ensureDevSession } from "@/stores/session";
 import { ParticipantTile } from "./participant-tile";
@@ -41,7 +47,7 @@ export function MeetingRoom({ meetingId }: { meetingId: string }) {
   const lobby = useLobby();
   const [room, setRoom] = useState<Room | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [renderCount, rerender] = useReducer((count: number) => count + 1, 0);
+  const [, rerender] = useReducer((count: number) => count + 1, 0);
   const [micLevel, setMicLevel] = useState(0);
   const [screenShareError, setScreenShareError] = useState<string | null>(null);
   const lobbyConfirmed = lobby.confirmedForMeetingId === meetingId;
@@ -56,12 +62,15 @@ export function MeetingRoom({ meetingId }: { meetingId: string }) {
     let connected: Room | null = null;
 
     async function join() {
+      installDiagnosticsHandlers();
       try {
+        reportEvent("join:start", { meetingId });
         const accessToken = await ensureDevSession();
         const ticket = await joinMeeting(accessToken, meetingId, {
           speakingLanguage: lobby.speakingLanguage,
           listeningLanguage: lobby.listeningLanguage,
         });
+        reportEvent("join:ticket", { serverUrl: ticket.serverUrl, identity: ticket.identity });
         connected = await connectToMeeting({
           serverUrl: ticket.serverUrl,
           token: ticket.token,
@@ -69,6 +78,7 @@ export function MeetingRoom({ meetingId }: { meetingId: string }) {
           audioDeviceId: lobby.audioDeviceId,
           videoDeviceId: lobby.videoDeviceId,
         });
+        reportEvent("join:connected", { state: connected.state });
         if (!active) {
           await connected.disconnect();
           return;
@@ -76,6 +86,7 @@ export function MeetingRoom({ meetingId }: { meetingId: string }) {
         for (const event of RERENDER_EVENTS) connected.on(event, rerender);
         setRoom(connected);
       } catch (cause) {
+        reportEvent("join:error", cause);
         if (active) setError(String(cause));
       }
     }
@@ -109,11 +120,18 @@ export function MeetingRoom({ meetingId }: { meetingId: string }) {
     };
   }, [micTrack]);
 
+  // Latest values for the diagnostics timer, which must not restart on every meter update.
+  const latest = useRef({ micLevel, screenShareError });
+  useEffect(() => {
+    latest.current = { micLevel, screenShareError };
+  }, [micLevel, screenShareError]);
   useEffect(() => {
     if (!room || !DIAGNOSTICS_URL) return;
-    const timer = setInterval(() => report(snapshot(room, micLevel, screenShareError)), 2000);
+    const timer = setInterval(() => {
+      report(snapshot(room, latest.current.micLevel, latest.current.screenShareError));
+    }, 2000);
     return () => clearInterval(timer);
-  }, [room, micLevel, screenShareError, renderCount]);
+  }, [room]);
 
   async function toggleScreenShare() {
     if (!room) return;

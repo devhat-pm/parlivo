@@ -57,7 +57,7 @@ docs/models.md      Model licence and spec verification
 
 ## Commands
 
-Prerequisites: Node 24.22.1 (`.nvmrc`), pnpm 12.14.0 (`corepack enable`, or prefix commands with `npx pnpm@12.14.0`), uv 0.13.5, Python 3.12.15 (uv installs it), Rust 1.99.1 for the desktop app (pinned in `apps/desktop/src-tauri/rust-toolchain.toml`).
+Prerequisites: Node 24.22.1 (`.nvmrc`), pnpm 12.14.0 (`corepack enable`, or prefix commands with `npx pnpm@12.14.0`), uv 0.13.5, Python 3.12.15 (uv installs it), Rust 1.99.1 for the desktop app (pinned in `apps/desktop/rust-toolchain.toml`).
 
 ```bash
 pnpm install                      # all TypeScript packages (lockfile: pnpm-lock.yaml)

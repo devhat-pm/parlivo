@@ -4,6 +4,7 @@ import { LANGUAGES, type LanguageCode } from "@parlivo/schemas";
 import { Alert, Button, Card, Form, Select, Space } from "antd";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { installDiagnosticsHandlers, reportEvent } from "@/lib/diagnostics";
 import { useLobby } from "@/stores/lobby";
 
 const languageOptions = LANGUAGES.map((language) => ({
@@ -37,10 +38,15 @@ export function Lobby({ meetingId }: { meetingId: string }) {
     let cancelled = false;
 
     async function preview() {
+      installDiagnosticsHandlers();
       try {
+        reportEvent("lobby:getUserMedia:start");
         stream = await navigator.mediaDevices.getUserMedia({
-          audio: audioDeviceId ? { deviceId: { exact: audioDeviceId } } : true,
-          video: videoDeviceId ? { deviceId: { exact: videoDeviceId } } : true,
+          // "ideal", not "exact": a stored device ID can go stale (unplugged device, new
+          // permission grant), and WKWebView then throws OverconstrainedError instead of
+          // falling back to another device.
+          audio: audioDeviceId ? { deviceId: { ideal: audioDeviceId } } : true,
+          video: videoDeviceId ? { deviceId: { ideal: videoDeviceId } } : true,
         });
         if (cancelled) return;
         if (videoRef.current) videoRef.current.srcObject = stream;
@@ -62,7 +68,11 @@ export function Lobby({ meetingId }: { meetingId: string }) {
         };
         tick();
         setError(null);
+        reportEvent("lobby:getUserMedia:ok", {
+          tracks: stream.getTracks().map((track) => `${track.kind}:${track.label}`),
+        });
       } catch (cause) {
+        reportEvent("lobby:getUserMedia:error", cause);
         setError(`Camera or microphone unavailable: ${String(cause)}`);
       }
     }

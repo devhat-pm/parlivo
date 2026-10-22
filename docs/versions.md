@@ -13,7 +13,7 @@ Where pins live: TypeScript in the `catalog:` block of `pnpm-workspace.yaml`; Py
 | Python     | 3.12.15 | 2026-10-01 | [link](https://endoflife.date/python)                | .python-version, pyproject requires-python | Not the newest (3.15.1 is). Decision A5: Python stays on 3.12 because kokoro 0.9.4 requires <3.13 (ARCHITECTURE.md section 8 also mandates 3.12); vllm and livekit-agents exclude 3.15 anyway. |
 | uv         | 0.13.5  | 2026-10-22 | [link](https://pypi.org/project/uv/0.13.5/)          | CI (astral-sh/setup-uv), CLAUDE.md         |                                                                                                                                                                                                |
 | uv_build   | 0.13.5  | 2026-10-22 | [link](https://pypi.org/project/uv-build/0.13.5/)    | pyproject [build-system]                   |                                                                                                                                                                                                |
-| Rust       | 1.99.1  | 2026-10-01 | [link](https://endoflife.date/rust)                  | apps/desktop/src-tauri/rust-toolchain.toml |                                                                                                                                                                                                |
+| Rust       | 1.99.1  | 2026-10-01 | [link](https://endoflife.date/rust)                  | apps/desktop/rust-toolchain.toml           |                                                                                                                                                                                                |
 
 ## Frontend (pnpm catalog)
 
