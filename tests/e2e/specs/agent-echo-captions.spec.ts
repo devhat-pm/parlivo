@@ -1,4 +1,4 @@
-import { execSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { type Browser, chromium, expect, type Page, test } from "@playwright/test";
 
@@ -82,7 +82,10 @@ test("listener gets the speaker's echo and captions, and the echo survives an ag
     // Kill the agent worker (scripts/run-agent.sh restarts it); time until a new echo track.
     const sidBefore = await echo.getAttribute("data-track-sid");
     const killedAt = Date.now();
-    execSync('pkill -9 -f "bin/parlivo-agent start"');
+    const pid = Number(
+      readFileSync(fileURLToPath(new URL("../../../.run/agent.pid", import.meta.url)), "utf8"),
+    );
+    process.kill(pid, "SIGKILL");
     await expect(
       listener.locator(
         `[data-testid="translated-track"][data-track-name="translated-${speakerId}-echo"]:not([data-track-sid="${sidBefore}"])`,

@@ -57,3 +57,4 @@ weights/
 # Source document (ARCHITECTURE.md is the source of truth)
 *.docx
 diagnostics*.jsonl
+.run/
