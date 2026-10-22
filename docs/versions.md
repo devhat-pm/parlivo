@@ -4,6 +4,8 @@ All versions were looked up on **2026-10-22** from the source linked in each row
 
 Where pins live: TypeScript in the `catalog:` block of `pnpm-workspace.yaml`; Python in each `pyproject.toml` (CPU-safe code and dev tools) and `requirements-gpu*.txt` (Linux/CUDA stack, never installed in CI); Rust in `Cargo.toml` and `rust-toolchain.toml`; runtimes in `.nvmrc` and `.python-version`; transitive dependencies in `pnpm-lock.yaml`, each project's `uv.lock` and `Cargo.lock`.
 
+Dependabot ignores three updates that would break a recorded constraint: TypeScript majors (typescript-eslint supports <6.1), `@types/node` majors (it follows the Node 24 runtime), and `torch` (pinned exactly by vllm and chatterbox-tts). Bump those by hand. PRs #1 and #2 were closed for these reasons on 2026-10-22.
+
 ## Runtimes and package managers
 
 | Dependency | Version | Released   | Source                                               | Used in                                    | Note                                                                                                                                                                                           |

@@ -7,6 +7,13 @@ updates:
     schedule: { interval: weekly }
     groups:
       npm: { patterns: ["*"] }
+    ignore:
+      # typescript-eslint supports TypeScript <6.1 only (docs/versions.md).
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
+      # @types/node tracks the Node runtime line (24), not the newest Node.
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: uv
     directories:
       - /services/agent
@@ -18,6 +25,9 @@ updates:
     schedule: { interval: weekly }
     groups:
       python: { patterns: ["*"] }
+    ignore:
+      # torch is pinned exactly by vllm (translate) and chatterbox-tts (tts); bump it by hand.
+      - dependency-name: torch
   - package-ecosystem: cargo
     directory: /apps/desktop/src-tauri
     schedule: { interval: weekly }
