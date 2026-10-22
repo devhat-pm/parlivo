@@ -10,6 +10,7 @@ const API_URL = process.env["NEXT_PUBLIC_API_URL"] ?? "http://localhost:3001";
 export default defineConfig({
   testDir: "./specs",
   timeout: 60_000,
+  workers: 1,
   expect: { timeout: 20_000 },
   fullyParallel: false,
   retries: process.env["CI"] ? 1 : 0,
@@ -31,6 +32,23 @@ export default defineConfig({
       cwd: "../..",
       reuseExistingServer: !process.env["CI"],
       timeout: 60_000,
+    },
+    {
+      // STT in STT_MODE: cpu (tiny) in CI, mac (large-v3-turbo on Metal) on Apple Silicon.
+      command: "uv run --locked parlivo-stt",
+      url: "http://127.0.0.1:8300/healthz",
+      cwd: "../../services/stt",
+      env: { STT_MODE: process.env["STT_MODE"] ?? "cpu" },
+      reuseExistingServer: !process.env["CI"],
+      timeout: 300_000,
+    },
+    {
+      // Translation agent with automatic restart (the crash test kills it).
+      command: "bash scripts/run-agent.sh",
+      url: "http://localhost:9464/metrics",
+      cwd: "../..",
+      reuseExistingServer: !process.env["CI"],
+      timeout: 180_000,
     },
     {
       command: `pnpm --filter @parlivo/web exec next start -p ${WEB_PORT}`,

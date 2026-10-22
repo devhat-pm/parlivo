@@ -93,7 +93,7 @@ jobs:
       - run: cargo build --locked
 
   e2e:
-    name: Phase 0 gate (API integration + two-browser e2e)
+    name: Gates (API integration, two-browser e2e, agent echo and captions)
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7.0.1
@@ -109,8 +109,20 @@ jobs:
       - run: pnpm --filter @parlivo/api db:migrate
       - run: pnpm --filter @parlivo/api db:seed
       - run: pnpm --filter @parlivo/api test:integration
+      - uses: astral-sh/setup-uv@v10.3.1
+        with:
+          version: "0.13.5"
+          enable-cache: true
+          cache-dependency-glob: "services/*/uv.lock"
+      - name: Python environments for STT (cpu mode) and the agent
+        run: |
+          uv sync --locked --project services/stt
+          uv sync --locked --project services/agent
       - run: pnpm --filter @parlivo/e2e exec playwright install --with-deps chromium
+      # Playwright starts STT (STT_MODE=cpu, Whisper tiny) and the supervised agent itself.
       - run: pnpm --filter @parlivo/e2e test:e2e
+        env:
+          STT_MODE: cpu
       - name: LiveKit logs on failure
         if: failure()
         run: docker compose -f infra/dev/docker-compose.yml logs livekit --tail 200

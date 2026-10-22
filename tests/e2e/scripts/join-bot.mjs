@@ -13,7 +13,8 @@ if (!meetingId) {
 }
 
 const args = ["--use-fake-ui-for-media-stream", "--use-fake-device-for-media-stream"];
-if (process.env["FAKE_AUDIO"]) args.push(`--use-file-for-fake-audio-capture=${process.env["FAKE_AUDIO"]}`);
+if (process.env["FAKE_AUDIO"])
+  args.push(`--use-file-for-fake-audio-capture=${process.env["FAKE_AUDIO"]}`);
 const browser = await chromium.launch({ args });
 const context = await browser.newContext({ permissions: ["camera", "microphone"] });
 const page = await context.newPage();

@@ -4,7 +4,7 @@ import { parseTranslatedTrackName } from "@parlivo/realtime";
 import type { Room, Track } from "livekit-client";
 import { useEffect, useRef } from "react";
 
-function AudioTrackElement({ track, name }: { track: Track; name: string }) {
+function AudioTrackElement({ track, name, sid }: { track: Track; name: string; sid: string }) {
   const ref = useRef<HTMLAudioElement>(null);
   useEffect(() => {
     const element = ref.current;
@@ -14,7 +14,15 @@ function AudioTrackElement({ track, name }: { track: Track; name: string }) {
       track.detach(element);
     };
   }, [track]);
-  return <audio ref={ref} autoPlay data-testid="translated-track" data-track-name={name} />;
+  return (
+    <audio
+      ref={ref}
+      autoPlay
+      data-testid="translated-track"
+      data-track-name={name}
+      data-track-sid={sid}
+    />
+  );
 }
 
 /** Plays every translated track this listener is subscribed to (published by the agent). */
@@ -32,6 +40,7 @@ export function TranslatedAudio({ room }: { room: Room }) {
             key={publication.trackSid}
             track={publication.track}
             name={publication.trackName}
+            sid={publication.trackSid}
           />
         ) : null,
       )}

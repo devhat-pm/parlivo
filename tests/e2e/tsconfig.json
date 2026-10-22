@@ -1,5 +1,9 @@
 {
   "extends": "@parlivo/config/tsconfig/base.json",
-  "compilerOptions": { "noEmit": true, "types": ["node"] },
+  "compilerOptions": {
+    "noEmit": true,
+    "types": ["node"],
+    "lib": ["ES2023", "DOM"]
+  },
   "include": ["specs", "playwright.config.ts"]
 }
