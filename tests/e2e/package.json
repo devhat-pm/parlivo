@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "playwright test"
+    "test:e2e": "playwright test"
   },
   "devDependencies": {
     "@parlivo/config": "workspace:*",

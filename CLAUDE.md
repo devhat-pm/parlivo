@@ -68,6 +68,11 @@ pnpm lint && pnpm typecheck && pnpm test && pnpm build
 pnpm py lint && pnpm py typecheck && pnpm py test && pnpm py build
 pnpm format:check
 
+# Local infrastructure (LiveKit, coturn, Postgres+pgvector, Valkey, NATS); see infra/dev/README.md
+pnpm dev:infra                            # up + wait for health checks
+pnpm dev:infra:down                       # stop (dev:infra:reset also deletes volumes)
+pnpm --filter @parlivo/api db:migrate && pnpm --filter @parlivo/api db:seed
+
 # One TypeScript package
 pnpm --filter @parlivo/web dev            # http://localhost:3000
 pnpm --filter @parlivo/api build && pnpm --filter @parlivo/api start   # PORT, default 3001
@@ -85,8 +90,10 @@ uv run mypy
 uv run pytest
 uv build
 
-# e2e and load
-pnpm --filter @parlivo/e2e test
+# Integration, e2e (phase 0 gate) and load; all need pnpm dev:infra plus migrate and seed
+pnpm --filter @parlivo/api test:integration
+pnpm --filter @parlivo/e2e test:e2e       # web on 3100, API on 3001
+node tests/e2e/scripts/join-bot.mjs <meetingId>   # headless participant for manual checks
 k6 run tests/load/scripts/placeholder.js
 ```
 

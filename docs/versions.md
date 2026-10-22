@@ -120,10 +120,11 @@ Where pins live: TypeScript in the `catalog:` block of `pnpm-workspace.yaml`; Py
 
 ## CI (GitHub Actions)
 
-| Dependency          | Version | Released   | Source                                                             | Used in                  | Note |
-| ------------------- | ------- | ---------- | ------------------------------------------------------------------ | ------------------------ | ---- |
-| actions/checkout    | v7.0.1  | 2026-07-20 | [link](https://github.com/actions/checkout/releases/tag/v7.0.1)    | .github/workflows/ci.yml |      |
-| actions/setup-node  | v7.1.0  | 2026-10-08 | [link](https://github.com/actions/setup-node/releases/tag/v7.1.0)  | .github/workflows/ci.yml |      |
-| pnpm/action-setup   | v6.1.0  | 2026-09-05 | [link](https://github.com/pnpm/action-setup/releases/tag/v6.1.0)   | .github/workflows/ci.yml |      |
-| astral-sh/setup-uv  | v10.3.1 | 2026-10-21 | [link](https://github.com/astral-sh/setup-uv/releases/tag/v10.3.1) | .github/workflows/ci.yml |      |
-| Swatinem/rust-cache | v2.9.3  | 2026-10-20 | [link](https://github.com/Swatinem/rust-cache/releases/tag/v2.9.3) | .github/workflows/ci.yml |      |
+| Dependency              | Version | Released   | Source                                                                 | Used in                  | Note                             |
+| ----------------------- | ------- | ---------- | ---------------------------------------------------------------------- | ------------------------ | -------------------------------- |
+| actions/checkout        | v7.0.1  | 2026-07-20 | [link](https://github.com/actions/checkout/releases/tag/v7.0.1)        | .github/workflows/ci.yml |                                  |
+| actions/setup-node      | v7.1.0  | 2026-10-08 | [link](https://github.com/actions/setup-node/releases/tag/v7.1.0)      | .github/workflows/ci.yml |                                  |
+| pnpm/action-setup       | v6.1.0  | 2026-09-05 | [link](https://github.com/pnpm/action-setup/releases/tag/v6.1.0)       | .github/workflows/ci.yml |                                  |
+| astral-sh/setup-uv      | v10.3.1 | 2026-10-21 | [link](https://github.com/astral-sh/setup-uv/releases/tag/v10.3.1)     | .github/workflows/ci.yml |                                  |
+| Swatinem/rust-cache     | v2.9.3  | 2026-10-20 | [link](https://github.com/Swatinem/rust-cache/releases/tag/v2.9.3)     | .github/workflows/ci.yml |                                  |
+| actions/upload-artifact | v7.0.2  | 2026-10-07 | [link](https://github.com/actions/upload-artifact/releases/tag/v7.0.2) | .github/workflows/ci.yml | Playwright report on e2e failure |

@@ -77,3 +77,34 @@ jobs:
       - run: cargo clippy --all-targets --locked -- -D warnings
       - run: cargo test --locked
       - run: cargo build --locked
+
+  e2e:
+    name: Phase 0 gate (API integration + two-browser e2e)
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: pnpm/action-setup@v6.1.0
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Start the dev stack (LiveKit, coturn, Postgres, Valkey, NATS)
+        run: pnpm dev:infra
+      - run: pnpm turbo run build --filter=@parlivo/api --filter=@parlivo/web
+      - run: pnpm --filter @parlivo/api db:migrate
+      - run: pnpm --filter @parlivo/api db:seed
+      - run: pnpm --filter @parlivo/api test:integration
+      - run: pnpm --filter @parlivo/e2e exec playwright install --with-deps chromium
+      - run: pnpm --filter @parlivo/e2e test:e2e
+      - name: LiveKit logs on failure
+        if: failure()
+        run: docker compose -f infra/dev/docker-compose.yml logs livekit --tail 200
+      - uses: actions/upload-artifact@v7.0.2
+        if: failure()
+        with:
+          name: playwright-report
+          path: |
+            tests/e2e/playwright-report
+            tests/e2e/test-results
+          retention-days: 7
