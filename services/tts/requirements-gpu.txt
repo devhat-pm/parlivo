@@ -1,0 +1,7 @@
+# GPU runtime stack for the primary TTS deployment (VoxCPM2 + Kokoro), pinned exactly
+# (see docs/versions.md). Linux + CUDA only. Installed in the GPU Docker image, not in
+# CI or on macOS. Model weights are never installed by this file.
+voxcpm==2.0.3
+kokoro==0.9.4
+torch==2.14.1
+ray[serve]==2.59.0

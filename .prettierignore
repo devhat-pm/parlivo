@@ -1,0 +1,9 @@
+pnpm-lock.yaml
+**/uv.lock
+**/.next
+**/dist
+**/out
+**/target
+**/src-tauri/gen
+ARCHITECTURE.md
+docs/assets

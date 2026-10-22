@@ -1,0 +1,11 @@
+# Shared Ruff config for every Python project. Projects extend it with
+#   [tool.ruff]
+#   extend = "../../packages/config/python/ruff.toml"
+target-version = "py312"
+line-length = 100
+
+[lint]
+select = ["E", "F", "W", "I", "B", "UP", "N", "SIM", "RUF", "ASYNC", "PT"]
+
+[format]
+quote-style = "double"

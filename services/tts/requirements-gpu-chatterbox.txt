@@ -1,0 +1,6 @@
+# Chatterbox Multilingual fallback, kept in its own image. The chatterbox-tts 0.1.7
+# package pins torch==2.6.0 and gradio==6.8.0; gradio's starlette<1.0 conflicts with
+# ray[serve]==2.59.0, so this cannot share an environment with the primary TTS
+# deployment. How it is served is an open question (see the prompt 1 report).
+chatterbox-tts==0.1.7
+torch==2.6.0

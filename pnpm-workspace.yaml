@@ -1,0 +1,76 @@
+packages:
+  - apps/*
+  - packages/*
+  - tests/e2e
+  - tests/load
+
+# Single source of truth for JavaScript/TypeScript versions.
+# Every entry is an exact pin; see docs/versions.md for dates and sources.
+catalog:
+  # Frontend
+  next: 16.4.2
+  react: 19.3.1
+  react-dom: 19.3.1
+  antd: 6.6.7
+  framer-motion: 14.6.0
+  tailwindcss: 4.3.3
+  "@tailwindcss/postcss": 4.3.3
+  zustand: 5.0.16
+  "@tanstack/react-query": 5.104.5
+  # Desktop
+  "@tauri-apps/cli": 2.12.4
+  "@tauri-apps/api": 2.12.4
+  # Realtime
+  livekit-client: 2.23.0
+  livekit-server-sdk: 2.19.2
+  # API
+  "@nestjs/core": 12.2.0
+  "@nestjs/common": 12.2.0
+  "@nestjs/platform-express": 12.2.0
+  "@nestjs/testing": 12.2.0
+  reflect-metadata: 0.2.2
+  rxjs: 7.8.2
+  prisma: 7.10.1
+  "@prisma/client": 7.10.1
+  # Schemas
+  zod: 4.6.7
+  # Tooling
+  turbo: 2.11.10
+  typescript: 6.0.3
+  eslint: 10.13.0
+  "@eslint/js": 10.0.1
+  typescript-eslint: 8.72.0
+  "@next/eslint-plugin-next": 16.4.2
+  eslint-plugin-react-hooks: 7.1.1
+  globals: 17.13.0
+  prettier: 3.9.10
+  vitest: 5.0.5
+  "@playwright/test": 1.64.1
+  "@types/node": 24.19.2
+  "@types/react": 19.3.0
+  "@types/react-dom": 19.3.0
+
+minimumReleaseAgeExclude:
+  - "@tauri-apps/cli-darwin-arm64@2.12.4"
+  - "@tauri-apps/cli-darwin-x64@2.12.4"
+  - "@tauri-apps/cli-linux-arm-gnueabihf@2.12.4"
+  - "@tauri-apps/cli-linux-arm64-gnu@2.12.4"
+  - "@tauri-apps/cli-linux-arm64-musl@2.12.4"
+  - "@tauri-apps/cli-linux-riscv64-gnu@2.12.4"
+  - "@tauri-apps/cli-linux-x64-gnu@2.12.4"
+  - "@tauri-apps/cli-linux-x64-musl@2.12.4"
+  - "@tauri-apps/cli-win32-arm64-msvc@2.12.4"
+  - "@tauri-apps/cli-win32-ia32-msvc@2.12.4"
+  - "@tauri-apps/cli-win32-x64-msvc@2.12.4"
+  - "@tauri-apps/cli@2.12.4"
+  - framer-motion@14.6.0
+  - livekit-server-sdk@2.19.2
+  - motion-dom@14.6.0
+  - motion-utils@14.6.0
+  - zustand@5.0.16
+
+# Dependencies allowed to run install scripts (pnpm blocks all others).
+allowBuilds:
+  "@prisma/engines": true
+  prisma: true
+  unrs-resolver: true

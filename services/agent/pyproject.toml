@@ -1,0 +1,39 @@
+[project]
+name = "parlivo-agent"
+version = "0.0.0"
+description = "LiveKit Agents translation agent: VAD, pipeline orchestration, track publishing, captions"
+readme = "README.md"
+requires-python = "==3.12.*"
+dependencies = [
+    "pydantic==2.14.1",
+    "livekit-agents==1.8.8",
+    "nats-py==2.16.0",
+]
+
+[project.scripts]
+parlivo-agent = "parlivo_agent.main:main"
+
+[dependency-groups]
+dev = [
+    "mypy==2.4.0",
+    "pytest==9.1.1",
+    "ruff==0.17.1",
+]
+
+[build-system]
+requires = ["uv_build==0.13.5"]
+build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "parlivo_agent"
+
+[tool.ruff]
+extend = "../../packages/config/python/ruff.toml"
+
+[tool.mypy]
+strict = true
+files = ["src", "tests"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"

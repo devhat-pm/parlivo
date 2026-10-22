@@ -1,0 +1,17 @@
+[package]
+name = "parlivo-desktop"
+version = "0.0.0"
+description = "Parlivo desktop shell (Tauri 2)"
+edition = "2021"
+rust-version = "1.99"
+publish = false
+
+[lib]
+name = "parlivo_desktop_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "=2.7.4", features = [] }
+
+[dependencies]
+tauri = { version = "=2.12.5", features = [] }

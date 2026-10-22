@@ -1,0 +1,19 @@
+{
+  "name": "@parlivo/desktop",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "tauri": "tauri",
+    "rust:fmt": "cargo fmt --manifest-path src-tauri/Cargo.toml --check",
+    "rust:lint": "cargo clippy --manifest-path src-tauri/Cargo.toml --all-targets --locked -- -D warnings",
+    "rust:test": "cargo test --manifest-path src-tauri/Cargo.toml --locked",
+    "rust:build": "cargo build --manifest-path src-tauri/Cargo.toml --locked"
+  },
+  "dependencies": {
+    "@tauri-apps/api": "catalog:"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "catalog:"
+  }
+}
