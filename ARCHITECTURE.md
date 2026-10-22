@@ -135,6 +135,21 @@ The pipeline is a streaming chain that runs per speaker per target language insi
 
 If the phase 1 benchmark measures real decode at the usual 70 to 80% of the theoretical ceiling and the budget overruns, the decision is pre-made: first move the in-region p50 target to 1.5 s; if the product needs 1.3 s, move pool B to L40S-class GPUs (about 860 GB/s) at roughly double the per-GPU cost. Incremental translation (committing stable partial transcripts with the LocalAgreement policy so translation starts mid-clause) is a phase 3 experiment that could cut 300 to 500 ms; it is not assumed anywhere in this document.
 
+### Phase 1 translation benchmark matrix
+
+Every candidate is measured on an L4 for per-stream decode tok/s per launch language and COMET per language pair; the default changes only if a candidate beats Qwen3 4B on COMET while staying inside the 350 ms translation budget.
+
+| Candidate | Precision | Role |
+|---|---|---|
+| Qwen3 4B | int8 | Current default |
+| Qwen3.5-4B | int8 | Candidate successor to the default (Apache 2.0) |
+| Gemma 4 E4B | int8 | Candidate (Apache 2.0, 4.5B effective parameters) |
+| Qwen3 8B | int4 + speculative decoding | Quality upgrade path |
+| Gemma 4 12B | int4 + speculative decoding | Quality upgrade path |
+| MADLAD-400 3B | int8 | Long-tail languages only (seq2seq, no prompts) |
+
+Speech-in direct translation (Gemma 4 audio input producing translated text) is a phase 3 experiment only: it would bypass the STT stage that captions and stored transcripts depend on. Nothing is substituted now.
+
 ### Multiple speakers and backlog policy
 
 - Each speaker's translation is its own track, so overlapping speech produces overlapping translated tracks, exactly as the original audio overlaps.
