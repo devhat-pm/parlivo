@@ -12,13 +12,18 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@parlivo/audio": "workspace:*",
+    "@parlivo/realtime": "workspace:*",
+    "@parlivo/schemas": "workspace:*",
     "@parlivo/ui": "workspace:*",
     "@tanstack/react-query": "catalog:",
     "antd": "catalog:",
     "framer-motion": "catalog:",
+    "livekit-client": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
+    "zod": "catalog:",
     "zustand": "catalog:"
   },
   "devDependencies": {
