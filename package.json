@@ -17,9 +17,12 @@
     "dev:infra": "docker compose -f infra/dev/docker-compose.yml up -d --wait",
     "dev:infra:down": "docker compose -f infra/dev/docker-compose.yml down",
     "dev:infra:reset": "docker compose -f infra/dev/docker-compose.yml down -v",
-    "dev:infra:logs": "docker compose -f infra/dev/docker-compose.yml logs -f"
+    "dev:infra:logs": "docker compose -f infra/dev/docker-compose.yml logs -f",
+    "docs:diagrams": "node scripts/render-diagrams.mjs"
   },
   "devDependencies": {
+    "@playwright/test": "catalog:",
+    "mermaid": "catalog:",
     "prettier": "catalog:",
     "turbo": "catalog:",
     "typescript": "catalog:"

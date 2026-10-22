@@ -67,6 +67,7 @@ pnpm py sync                      # all Python projects (one uv.lock each)
 pnpm lint && pnpm typecheck && pnpm test && pnpm build
 pnpm py lint && pnpm py typecheck && pnpm py test && pnpm py build
 pnpm format:check
+pnpm docs:diagrams                        # docs/assets/*.mmd -> SVG (Mermaid in Playwright's Chromium)
 
 # Local infrastructure (LiveKit, coturn, Postgres+pgvector, Valkey, NATS); see infra/dev/README.md
 pnpm dev:infra                            # up + wait for health checks

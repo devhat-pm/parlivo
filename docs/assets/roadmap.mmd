@@ -1,0 +1,10 @@
+%% Roadmap (ARCHITECTURE.md section 11). Regenerate the SVG with: pnpm docs:diagrams
+flowchart TB
+  p0["Phase 0 · Foundation (weeks 1–2)<br/>monorepo, CLAUDE.md, versions pinned, CPU compose stack,<br/>remote GPU box, LiveKit cluster, Tauri WebView spike<br/>Gate: two browsers join a room"]
+  p1["Phase 1 · Translated call (weeks 3–8)<br/>translation agent, STT, LLM translation, TTS, per-speaker tracks,<br/>captions, lobby and in-call UI; benchmarks: streams per GPU,<br/>tok/s per language, TTS first audio, glass-to-ear p50 and p95<br/>Gate: p50 1.3 s, p95 under 2 s in-region"]
+  p2["Phase 2 · Group meetings + AI notes (weeks 9–14)<br/>demo needs: video (25), per-language fan-out, screen share, recording,<br/>summaries, ask-the-meeting; after demo: chat, reactions, glossary, desktop apps<br/>Gate: investor demo ready"]
+  p3["Phase 3 · Beta launch (weeks 15–20)<br/>in-call assistant, search, integrations, SSO, Whop billing, 10 languages,<br/>Urdu TTS fine-tune; load tests: 100 streams, 25-person room, pool C burst<br/>Gate: 50 beta teams, NPS over 40"]
+  p4["Phase 4 · Scale and premium (weeks 21–28)<br/>100 participants, voice cloning, analytics, breakout rooms, mobile apps,<br/>second region, data residency, 99.9% SLO<br/>Gate: paying customers"]
+  p5["Phase 5 · Moat (week 29 onward)<br/>per-workspace translation fine-tuning (opt-in), 50 languages, webinars,<br/>enterprise compliance (SOC 2)"]
+  p0 --> p1 --> p2 --> p3 --> p4 --> p5
+  style p1 stroke:#1677ff,stroke-width:3px

@@ -22,4 +22,4 @@ An L4 has about 300 GB/s of memory bandwidth. Decode speed per stream is bounded
 - Positive: about 13 GB at int4 leaves room on a 24 GB L4 for KV cache and batching.
 - Negative: mixture-of-experts serving in vLLM is more sensitive to batch composition, and quality per language must be measured, not assumed. The pool C burst test and summary quality evaluation decide whether the alternate is needed.
 - Negative: the input-token throughput planning figure (2,000–3,000 tok/s) was estimated for a dense ~27B model. Prefill on a mixture-of-experts model does not get the same active-parameter discount as decode, so restate the figure after the pool C benchmark.
-- Note: the system architecture diagram (docs/assets/system-architecture.png) still says "27B int4" in the pool C box; regenerate it with the next diagram update.
+- Note: the architecture diagram is now generated from `docs/assets/architecture.mmd` (prompt 3) and shows 26B A4B.

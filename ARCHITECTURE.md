@@ -46,7 +46,7 @@ Parlivo is a video meeting platform, in the category of Zoom, Google Meet and Mi
 
 The system is three tiers: thin clients, a LiveKit media tier with a Python translation agent inside it, and a core API plus AI service behind it. The latency-critical path is the translation agent and GPU pools A and B; everything else is ordinary stateless services.
 
-![diagram](docs/assets/system-architecture.png)
+![diagram](docs/assets/architecture.svg)
 
 system architecture v2 · clients, LiveKit, translation agent, AI service, GPU pools, data
 
@@ -466,7 +466,7 @@ Parlivo is a workspace product: every meeting belongs to a workspace, and the wo
 
 Six phases, each with a hard gate; phase 2 is the investor demo and the point where the product is fundable.
 
-![diagram](docs/assets/roadmap.png)
+![diagram](docs/assets/roadmap.svg)
 
 roadmap · six phases with gates
 

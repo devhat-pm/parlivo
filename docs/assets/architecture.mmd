@@ -1,0 +1,41 @@
+%% System architecture (ARCHITECTURE.md section 2). Regenerate the SVG with: pnpm docs:diagrams
+flowchart TB
+  subgraph clients["Clients: one React codebase"]
+    web["Web app<br/>Next.js; Chrome, Safari, Edge"]
+    mac["macOS app<br/>Tauri 2, static export"]
+    win["Windows app<br/>Tauri 2, static export"]
+  end
+
+  sfu["LiveKit SFU cluster (2+ nodes) + coturn TURN<br/>rooms, audio, video, data tracks, recording egress<br/>exposed directly on UDP and TCP 443, not through Cloudflare"]
+  api["Core API (NestJS)<br/>users, workspaces, guests, Whop billing<br/>mints LiveKit tokens; behind Cloudflare"]
+
+  clients -- "WebRTC audio, video, captions" --> sfu
+  clients -- "REST, tokens" --> api
+
+  agent["Translation agent (Python, LiveKit Agents): latency-critical path<br/>one job per room; VAD, STT, translation, TTS per speaker per target language<br/>publishes translated-{speakerId}-{lang} lazily; captions on the data channel"]
+  sfu -- "one agent job per room" --> agent
+
+  subgraph gpu["GPU pools"]
+    poolA["Pool A: STT + TTS<br/>2x L4, Ray Serve, stateless<br/>Whisper large-v3-turbo, VoxCPM2, Kokoro"]
+    chatterbox["Chatterbox image<br/>torch 2.6, HTTP streaming, no Ray"]
+    poolB["Pool B: translation<br/>2x L4, vLLM, Qwen3 4B int8"]
+    poolC["Pool C: batch AI<br/>1x L4 spot, Gemma 4 26B A4B int4<br/>+ non-spot assistant replica from phase 3"]
+  end
+  agent --> poolA
+  poolA --> chatterbox
+  agent --> poolB
+
+  ai["AI service (FastAPI)<br/>summaries, RAG, extraction"]
+  pg[("PostgreSQL + pgvector<br/>transcripts")]
+  bus[("Valkey + NATS JetStream<br/>sessions, transcript events")]
+  obj[("Object storage<br/>recordings, voice profiles")]
+
+  agent -- "final transcripts (never audio)" --> bus
+  bus --> ai
+  ai --> poolC
+  ai --> pg
+  api --> pg
+  api --> bus
+  sfu -- "recording egress" --> obj
+
+  platform["Platform: Kubernetes, Cloudflare (web and API only), Whop, email provider,<br/>OpenTelemetry, Prometheus, Grafana, GitHub Actions"]
