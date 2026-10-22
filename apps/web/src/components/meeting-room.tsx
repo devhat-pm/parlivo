@@ -8,13 +8,7 @@ import { type Participant, type Room, RoomEvent, Track } from "livekit-client";
 import { useRouter } from "next/navigation";
 import { useEffect, useReducer, useRef, useState } from "react";
 import { joinMeeting } from "@/lib/api";
-import {
-  DIAGNOSTICS_URL,
-  installDiagnosticsHandlers,
-  report,
-  reportEvent,
-  snapshot,
-} from "@/lib/diagnostics";
+import { installDiagnosticsHandlers, report, reportEvent, snapshot } from "@/lib/diagnostics";
 import { useLobby } from "@/stores/lobby";
 import { ensureDevSession } from "@/stores/session";
 import { lobbyHref } from "@/lib/routes";
@@ -65,15 +59,16 @@ export function MeetingRoom({ meetingId }: { meetingId: string }) {
     let connected: Room | null = null;
 
     async function join() {
-      installDiagnosticsHandlers();
+      if (process.env.NEXT_PUBLIC_DIAGNOSTICS_URL) installDiagnosticsHandlers();
       try {
-        reportEvent("join:start", { meetingId });
+        if (process.env.NEXT_PUBLIC_DIAGNOSTICS_URL) reportEvent("join:start", { meetingId });
         const accessToken = await ensureDevSession();
         const ticket = await joinMeeting(accessToken, meetingId, {
           speakingLanguage: lobby.speakingLanguage,
           listeningLanguage: lobby.listeningLanguage,
         });
-        reportEvent("join:ticket", { serverUrl: ticket.serverUrl, identity: ticket.identity });
+        if (process.env.NEXT_PUBLIC_DIAGNOSTICS_URL)
+          reportEvent("join:ticket", { serverUrl: ticket.serverUrl, identity: ticket.identity });
         connected = await connectToMeeting({
           serverUrl: ticket.serverUrl,
           token: ticket.token,
@@ -81,7 +76,8 @@ export function MeetingRoom({ meetingId }: { meetingId: string }) {
           audioDeviceId: lobby.audioDeviceId,
           videoDeviceId: lobby.videoDeviceId,
         });
-        reportEvent("join:connected", { state: connected.state });
+        if (process.env.NEXT_PUBLIC_DIAGNOSTICS_URL)
+          reportEvent("join:connected", { state: connected.state });
         if (!active) {
           await connected.disconnect();
           return;
@@ -89,7 +85,7 @@ export function MeetingRoom({ meetingId }: { meetingId: string }) {
         for (const event of RERENDER_EVENTS) connected.on(event, rerender);
         setRoom(connected);
       } catch (cause) {
-        reportEvent("join:error", cause);
+        if (process.env.NEXT_PUBLIC_DIAGNOSTICS_URL) reportEvent("join:error", cause);
         if (active) setError(String(cause));
       }
     }
@@ -129,7 +125,7 @@ export function MeetingRoom({ meetingId }: { meetingId: string }) {
     latest.current = { micLevel, screenShareError };
   }, [micLevel, screenShareError]);
   useEffect(() => {
-    if (!room || !DIAGNOSTICS_URL) return;
+    if (!room || !process.env.NEXT_PUBLIC_DIAGNOSTICS_URL) return;
     const timer = setInterval(() => {
       report(snapshot(room, latest.current.micLevel, latest.current.screenShareError));
     }, 2000);

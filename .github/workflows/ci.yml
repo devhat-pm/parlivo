@@ -25,6 +25,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm format:check
       - run: pnpm turbo run lint typecheck test build
+      - name: Normal web build contains no diagnostics code (A4)
+        run: pnpm --filter @parlivo/web test:no-diagnostics
       - name: Desktop static export contains the query routes (A3)
         run: pnpm --filter @parlivo/web build:desktop && pnpm --filter @parlivo/web test:export
 

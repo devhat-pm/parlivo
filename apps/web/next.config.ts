@@ -10,7 +10,11 @@ const nextConfig: NextConfig = {
   ...(staticExport
     ? { output: "export" as const, distDir: "out", images: { unoptimized: true } }
     : {}),
-  env: { NEXT_PUBLIC_STATIC_EXPORT: staticExport ? "1" : "0" },
+  env: {
+    NEXT_PUBLIC_STATIC_EXPORT: staticExport ? "1" : "0",
+    // Always defined so the diagnostics flag is a build-time constant (src/lib/diagnostics.ts).
+    NEXT_PUBLIC_DIAGNOSTICS_URL: process.env["NEXT_PUBLIC_DIAGNOSTICS_URL"] ?? "",
+  },
 };
 
 export default nextConfig;

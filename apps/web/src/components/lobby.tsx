@@ -39,9 +39,9 @@ export function Lobby({ meetingId }: { meetingId: string }) {
     let cancelled = false;
 
     async function preview() {
-      installDiagnosticsHandlers();
+      if (process.env.NEXT_PUBLIC_DIAGNOSTICS_URL) installDiagnosticsHandlers();
       try {
-        reportEvent("lobby:getUserMedia:start");
+        if (process.env.NEXT_PUBLIC_DIAGNOSTICS_URL) reportEvent("lobby:getUserMedia:start");
         stream = await navigator.mediaDevices.getUserMedia({
           // "ideal", not "exact": a stored device ID can go stale (unplugged device, new
           // permission grant), and WKWebView then throws OverconstrainedError instead of
@@ -69,11 +69,12 @@ export function Lobby({ meetingId }: { meetingId: string }) {
         };
         tick();
         setError(null);
-        reportEvent("lobby:getUserMedia:ok", {
-          tracks: stream.getTracks().map((track) => `${track.kind}:${track.label}`),
-        });
+        if (process.env.NEXT_PUBLIC_DIAGNOSTICS_URL)
+          reportEvent("lobby:getUserMedia:ok", {
+            tracks: stream.getTracks().map((track) => `${track.kind}:${track.label}`),
+          });
       } catch (cause) {
-        reportEvent("lobby:getUserMedia:error", cause);
+        if (process.env.NEXT_PUBLIC_DIAGNOSTICS_URL) reportEvent("lobby:getUserMedia:error", cause);
         setError(`Camera or microphone unavailable: ${String(cause)}`);
       }
     }

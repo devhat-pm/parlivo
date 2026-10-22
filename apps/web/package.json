@@ -11,7 +11,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "build:desktop": "PARLIVO_STATIC_EXPORT=1 next build",
-    "test:export": "node scripts/check-static-export.mjs"
+    "test:export": "node scripts/check-static-export.mjs",
+    "test:no-diagnostics": "node scripts/check-no-diagnostics.mjs"
   },
   "dependencies": {
     "@parlivo/audio": "workspace:*",

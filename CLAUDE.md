@@ -100,6 +100,18 @@ k6 run tests/load/scripts/placeholder.js
 
 GPU stacks (`services/*/requirements-gpu*.txt`) are Linux + CUDA only and are installed in GPU images or on the remote GPU dev box, never on macOS or in CI. Never download model weights into the repo.
 
+## Diagnostics reporter (benchmark and spike evidence)
+
+`apps/web/src/lib/diagnostics.ts` reports lobby and join steps, console errors and warnings, and a room snapshot every 2 s (published tracks, subscriptions per remote, mic level, screen-share errors). It is **opt-in at build time** and is how phase 1 benchmark evidence is collected from real clients (browser or Tauri):
+
+```bash
+node scripts/diagnostics-receiver.mjs evidence.jsonl            # receiver on :8765
+NEXT_PUBLIC_DIAGNOSTICS_URL=http://localhost:8765/report pnpm --filter @parlivo/web build
+pnpm --filter @parlivo/web exec next start -p 3100              # or run the desktop app against it
+```
+
+Normal and production builds never set the variable. `next.config.ts` inlines it as an empty string, and every call site is guarded inline with `if (process.env.NEXT_PUBLIC_DIAGNOSTICS_URL)`, so the minifier drops the code. CI proves it with `pnpm --filter @parlivo/web test:no-diagnostics`. When adding a call site, keep the inline guard: an imported constant is not folded across modules.
+
 ## Latency budget (ARCHITECTURE.md section 4)
 
 **Glass-to-ear latency** is the time from the last voiced audio frame of a source clause (before the silence window that closes it) to the first translated audio sample played at the listener. The 300 ms silence window is inside the measurement; time spent speaking the clause is not. Targets, SLOs and the phase 1 gate all use this definition.

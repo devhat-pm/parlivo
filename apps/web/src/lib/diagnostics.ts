@@ -1,10 +1,14 @@
 import { type Room, Track } from "livekit-client";
 
 /**
- * Optional state reporter for spikes and manual verification. Only active when the app is
- * built with NEXT_PUBLIC_DIAGNOSTICS_URL; production builds never set it.
+ * Opt-in diagnostics reporter for spikes and phase 1 benchmark evidence (CLAUDE.md).
+ * next.config.ts always inlines NEXT_PUBLIC_DIAGNOSTICS_URL (empty unless set at build
+ * time). Call sites must guard with `if (process.env.NEXT_PUBLIC_DIAGNOSTICS_URL)` written
+ * inline (not an imported constant, which the bundler does not fold across modules), so a
+ * normal build drops them; scripts/check-no-diagnostics.mjs proves it.
  */
-export const DIAGNOSTICS_URL = process.env["NEXT_PUBLIC_DIAGNOSTICS_URL"];
+export const DIAGNOSTICS_URL = process.env["NEXT_PUBLIC_DIAGNOSTICS_URL"] ?? "";
+export const DIAGNOSTICS_ENABLED = DIAGNOSTICS_URL !== "";
 
 export interface MeetingSnapshot {
   at: string;
@@ -51,7 +55,7 @@ export function snapshot(
 }
 
 export function report(data: MeetingSnapshot): void {
-  if (!DIAGNOSTICS_URL) return;
+  if (!DIAGNOSTICS_ENABLED) return;
   void fetch(DIAGNOSTICS_URL, {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -61,7 +65,7 @@ export function report(data: MeetingSnapshot): void {
 
 /** Report a lifecycle step or error before a room exists (spikes only; no-op otherwise). */
 export function reportEvent(event: string, detail?: unknown): void {
-  if (!DIAGNOSTICS_URL) return;
+  if (!DIAGNOSTICS_ENABLED) return;
   void fetch(DIAGNOSTICS_URL, {
     method: "POST",
     headers: { "content-type": "application/json" },
@@ -78,7 +82,7 @@ let globalHandlersInstalled = false;
 
 /** Forward uncaught errors, console errors and console warnings to the diagnostics receiver. */
 export function installDiagnosticsHandlers(): void {
-  if (!DIAGNOSTICS_URL || globalHandlersInstalled) return;
+  if (!DIAGNOSTICS_ENABLED || globalHandlersInstalled) return;
   globalHandlersInstalled = true;
   window.addEventListener("error", (event) => reportEvent("window.error", event.message));
   window.addEventListener("unhandledrejection", (event) =>
