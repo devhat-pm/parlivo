@@ -22,3 +22,6 @@ Template:
 | --------------------------------------------------------- | ----------------------------------------------------------------------------------- |
 | [0001](0001-livekit-agents-over-custom-media-services.md) | LiveKit Agents instead of custom media services and a message bus on the audio path |
 | [0002](0002-translation-model-size-bandwidth-bound.md)    | Translation model size is set by L4 memory bandwidth: Qwen3 4B int8 by default      |
+| [0003](0003-whop-billing.md)                              | Whop is the billing provider                                                        |
+| [0004](0004-pool-c-gemma-4-26b-a4b.md)                    | Pool C batch LLM: Gemma 4 26B A4B primary, Qwen3 32B alternate                      |
+| [0005](0005-chatterbox-separate-image.md)                 | Chatterbox runs in its own image behind an internal HTTP streaming endpoint         |
