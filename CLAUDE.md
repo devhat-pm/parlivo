@@ -10,6 +10,10 @@ Rules for Claude Code (and humans) working in the Parlivo monorepo. `ARCHITECTUR
 
 Also: never commit secrets (`.env.example` only) or model weights; never put audio on NATS, disk or the API; no `any` in TypeScript; mypy `--strict` in Python; Conventional Commits, one PR per feature with "how I tested this".
 
+## Development principle (phase 1 onward)
+
+The full pipeline must run on the Mac (Apple Silicon, Metal) for day-to-day work: STT in `mac` mode (mlx-whisper, ADR 0007), the agent, LiveKit and everything else from `pnpm dev:infra`. CI runs the same flows in `cpu` mode. The remote NVIDIA L4 box exists **only for benchmarks**, because the latency budget and capacity figures in ARCHITECTURE.md are L4 numbers. Start it for a benchmark and terminate it immediately after (`pnpm gpu:up` ... `pnpm gpu:down`; about $0.59/h on RunPod; see `infra/gpu-dev/README.md` and ADR 0009). Mac-mode latency is never evidence for the latency budget.
+
 ## Stack (ARCHITECTURE.md section 3)
 
 | Layer             | Technology                                                                                                                                                  |

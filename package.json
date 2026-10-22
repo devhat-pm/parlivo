@@ -18,7 +18,14 @@
     "dev:infra:down": "docker compose -f infra/dev/docker-compose.yml down",
     "dev:infra:reset": "docker compose -f infra/dev/docker-compose.yml down -v",
     "dev:infra:logs": "docker compose -f infra/dev/docker-compose.yml logs -f",
-    "docs:diagrams": "node scripts/render-diagrams.mjs"
+    "docs:diagrams": "node scripts/render-diagrams.mjs",
+    "gpu:login": "node infra/gpu-dev/gpu.mjs login",
+    "gpu:up": "node infra/gpu-dev/gpu.mjs up",
+    "gpu:bootstrap": "node infra/gpu-dev/gpu.mjs bootstrap",
+    "gpu:ssh": "node infra/gpu-dev/gpu.mjs ssh",
+    "gpu:status": "node infra/gpu-dev/gpu.mjs status",
+    "gpu:stop": "node infra/gpu-dev/gpu.mjs stop",
+    "gpu:down": "node infra/gpu-dev/gpu.mjs down"
   },
   "devDependencies": {
     "@playwright/test": "catalog:",
