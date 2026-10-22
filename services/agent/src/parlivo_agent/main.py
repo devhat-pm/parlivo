@@ -1,15 +1,6 @@
-"""Placeholder entry point; real behaviour arrives in later prompts."""
+"""Run the translation agent worker: `parlivo-agent dev` (or `start` in production)."""
 
-from parlivo_agent import SERVICE_NAME
-
-
-def describe() -> str:
-    return f"parlivo-{SERVICE_NAME} placeholder"
-
-
-def main() -> None:
-    print(describe())
-
+from parlivo_agent.worker import main
 
 if __name__ == "__main__":
     main()
