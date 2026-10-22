@@ -155,6 +155,7 @@ If the phase 1 benchmark measures real decode at the usual 70 to 80% of the theo
 
 - Pool A runs STT and TTS as stateless Ray Serve deployments; the agent owns every per-speaker buffer, so any replica can serve any request. Pool B runs the translation LLM on vLLM with continuous batching across rooms; pool C runs the batch AI LLM and never serves the live path.
 - STT (whisper turbo int8, about 1.5 GB) and TTS (VoxCPM2 2B fp16, about 5 GB) share a 24 GB L4 with headroom for batching. The 4B translation LLM at int8 (about 4.5 GB plus KV cache) takes its own L4 so that decode bandwidth is not shared with STT and TTS.
+- Chatterbox runs in its own container image (torch 2.6.0, no Ray), because its package pins torch and a gradio version that conflict with Ray Serve. It exposes a small internal HTTP streaming endpoint (text in, PCM chunks out) on the cluster network only; the TTS Ray Serve deployment calls it as a backend for languages where Chatterbox is the selected model, so the agent still sees one TTS service.
 - One replica of each model is always warm; autoscaling adds replicas at 70% queue utilization.
 
 ## 5. Scalability and performance
@@ -383,6 +384,7 @@ Meeting audio is the most sensitive data a company has; Parlivo treats privacy a
 - Transcripts and AI outputs are stored by default with 90-day retention (configurable from 0 to unlimited per workspace). Turning storage off disables post-call AI features.
 - Consent: every participant sees a join-time notice ("this meeting is transcribed and translated by AI; the host may record") and must accept to join; the notice is in the participant's own language. This covers two-party consent jurisdictions and GDPR transparency; the host workspace is the data controller, Parlivo the processor, with a DPA template in the repo.
 - Guests and external participants are governed by the host workspace's region and retention; they can request deletion of their own audio-derived data via a link in the post-call email.
+- Chatterbox output carries an inaudible watermark (Resemble AI's Perth watermarker) in every generated clip; this is disclosed in the privacy policy.
 - Voice cloning is biometric data (GDPR Art. 9, Illinois BIPA): it requires a recorded consent phrase, is stored encrypted per user, is deletable at any time, and is never shared across workspaces.
 - Region: single EU region (Frankfurt) at launch; US and Middle East regions with per-workspace residency in phase 4. Meetings are pinned to the host workspace's region.
 - GDPR: data export and deletion endpoints from day one.
