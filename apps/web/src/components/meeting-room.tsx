@@ -12,7 +12,10 @@ import { installDiagnosticsHandlers, report, reportEvent, snapshot } from "@/lib
 import { useLobby } from "@/stores/lobby";
 import { ensureDevSession } from "@/stores/session";
 import { lobbyHref } from "@/lib/routes";
+import { translationStatus } from "@/lib/translation-status";
+import { CaptionRail } from "./caption-rail";
 import { ParticipantTile } from "./participant-tile";
+import { TranslatedAudio } from "./translated-audio";
 
 const RERENDER_EVENTS = [
   RoomEvent.ParticipantConnected,
@@ -26,6 +29,7 @@ const RERENDER_EVENTS = [
   RoomEvent.ConnectionQualityChanged,
   RoomEvent.ConnectionStateChanged,
   RoomEvent.AudioPlaybackStatusChanged,
+  RoomEvent.ParticipantMetadataChanged,
 ] as const;
 
 function languagesOf(participant: Participant): string {
@@ -46,6 +50,7 @@ export function MeetingRoom({ meetingId }: { meetingId: string }) {
   const [attempt, setAttempt] = useState(0);
   const [, rerender] = useReducer((count: number) => count + 1, 0);
   const [micLevel, setMicLevel] = useState(0);
+  const [agentSeen, setAgentSeen] = useState(false);
   const [screenShareError, setScreenShareError] = useState<string | null>(null);
   const lobbyConfirmed = lobby.confirmedForMeetingId === meetingId;
 
@@ -83,6 +88,14 @@ export function MeetingRoom({ meetingId }: { meetingId: string }) {
           return;
         }
         for (const event of RERENDER_EVENTS) connected.on(event, rerender);
+        // Remember that the translation agent has been here, so its absence reads as
+        // "reconnecting" rather than "starting".
+        if ([...connected.remoteParticipants.values()].some((participant) => participant.isAgent)) {
+          setAgentSeen(true);
+        }
+        connected.on(RoomEvent.ParticipantConnected, (participant) => {
+          if (participant.isAgent) setAgentSeen(true);
+        });
         setRoom(connected);
       } catch (cause) {
         if (process.env.NEXT_PUBLIC_DIAGNOSTICS_URL) reportEvent("join:error", cause);
@@ -150,6 +163,10 @@ export function MeetingRoom({ meetingId }: { meetingId: string }) {
     router.push("/");
   }
 
+  const agentPresent = room
+    ? [...room.remoteParticipants.values()].some((participant) => participant.isAgent)
+    : false;
+
   function retry() {
     setError(null);
     setRoom(null);
@@ -181,13 +198,27 @@ export function MeetingRoom({ meetingId }: { meetingId: string }) {
     );
   }
 
-  const remotes = [...room.remoteParticipants.values()];
+  const remotes = [...room.remoteParticipants.values()].filter(
+    (participant) => !participant.isAgent,
+  );
+  const status = translationStatus(agentPresent, agentSeen);
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Layout.Header style={{ display: "flex", alignItems: "center", gap: 12, color: "#fff" }}>
         <span>Meeting {meetingId}</span>
         <Tag data-testid="room-state">{room.state}</Tag>
         <Tag data-testid="participant-count">{remotes.length + 1} in call</Tag>
+        <Tag
+          data-testid="translation-status"
+          data-status={status}
+          color={status === "active" ? "green" : status === "reconnecting" ? "orange" : "default"}
+        >
+          {status === "active"
+            ? "translation on"
+            : status === "reconnecting"
+              ? "translation reconnecting"
+              : "translation starting"}
+        </Tag>
         <Space style={{ marginLeft: "auto" }}>
           {!room.canPlaybackAudio && (
             <Button onClick={() => void room.startAudio()}>Enable audio</Button>
@@ -201,6 +232,8 @@ export function MeetingRoom({ meetingId }: { meetingId: string }) {
         </Space>
       </Layout.Header>
       <Layout.Content style={{ padding: 16 }}>
+        <CaptionRail room={room} />
+        <TranslatedAudio room={room} />
         {screenShareError && (
           <Alert
             type="warning"
