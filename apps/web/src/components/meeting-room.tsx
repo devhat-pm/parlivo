@@ -47,6 +47,8 @@ export function MeetingRoom({ meetingId }: { meetingId: string }) {
   const lobby = useLobby();
   const [room, setRoom] = useState<Room | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // Bumping the attempt number re-runs the join effect (the Retry button).
+  const [attempt, setAttempt] = useState(0);
   const [, rerender] = useReducer((count: number) => count + 1, 0);
   const [micLevel, setMicLevel] = useState(0);
   const [screenShareError, setScreenShareError] = useState<string | null>(null);
@@ -98,7 +100,7 @@ export function MeetingRoom({ meetingId }: { meetingId: string }) {
     };
     // The lobby choice is fixed once confirmed for this meeting.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lobbyConfirmed, meetingId]);
+  }, [lobbyConfirmed, meetingId, attempt]);
 
   // Local microphone level, metered on the audio thread by an AudioWorklet (packages/audio).
   const micTrack = room?.localParticipant.getTrackPublication(Track.Source.Microphone)?.track;
@@ -151,8 +153,28 @@ export function MeetingRoom({ meetingId }: { meetingId: string }) {
     router.push("/");
   }
 
+  function retry() {
+    setError(null);
+    setRoom(null);
+    setAttempt((count) => count + 1);
+  }
+
   if (error) {
-    return <Alert type="error" title="Could not join the meeting" description={error} />;
+    return (
+      <div style={{ maxWidth: 640, margin: "48px auto", padding: "0 16px" }}>
+        <Alert
+          type="error"
+          data-testid="join-error"
+          title="Could not join the meeting"
+          description={error}
+          action={
+            <Button type="primary" onClick={retry}>
+              Retry
+            </Button>
+          }
+        />
+      </div>
+    );
   }
   if (!room) {
     return (

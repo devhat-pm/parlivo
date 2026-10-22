@@ -6,6 +6,9 @@ import {
   type RoomOptions,
 } from "livekit-client";
 import { decideSubscription, type LocalListener } from "./subscription.js";
+import { withTimeout } from "./timeout.js";
+
+export const DEFAULT_CONNECT_TIMEOUT_MS = 10_000;
 
 export interface ConnectOptions {
   serverUrl: string;
@@ -15,6 +18,8 @@ export interface ConnectOptions {
   videoDeviceId?: string | undefined;
   /** Publish the microphone and camera after connecting (default true). */
   publish?: boolean;
+  /** Give up connecting after this long and throw ConnectTimeoutError (default 10 s). */
+  connectTimeoutMs?: number;
 }
 
 /**
@@ -44,7 +49,11 @@ export async function connectToMeeting(options: ConnectOptions): Promise<Room> {
     participant.trackPublications.forEach((publication) => apply(publication, participant));
   });
 
-  await room.connect(options.serverUrl, options.token, { autoSubscribe: false });
+  await withTimeout(
+    room.connect(options.serverUrl, options.token, { autoSubscribe: false }),
+    options.connectTimeoutMs ?? DEFAULT_CONNECT_TIMEOUT_MS,
+    () => void room.disconnect(),
+  );
   room.remoteParticipants.forEach((participant) => {
     participant.trackPublications.forEach((publication) => apply(publication, participant));
   });
