@@ -167,7 +167,7 @@ Capacity is planned in streams, and the number of streams one GPU can carry is m
 
 | Resource | Planning figure | How it is verified |
 |---|---|---|
-| Pool A (STT + TTS), one L4 | 10 concurrent active streams | Phase 1 gate: benchmark with synthetic speakers at p95 under 2 s; the real number replaces this figure in the doc |
+| Pool A (STT + TTS), one L4 | 10 concurrent active streams (**at risk**: VoxCPM2's published real-time factor is about 0.30 on an RTX 4090, and an L4 has about a third of its memory bandwidth) | Phase 1 gate: benchmark with synthetic speakers at p95 under 2 s; the real number replaces this figure in the doc. The benchmark measures TTS first-audio time and TTS streams per GPU separately for VoxCPM2, Chatterbox and Kokoro; the production default per language is whichever permissively licensed model meets 150 ms first-audio at the highest stream count. Kokoro remains the English default if VoxCPM2 misses |
 | Pool B (translation LLM), one L4 | 40 concurrent active streams | 4B int8; batching raises throughput but not per-stream speed, so the per-stream tok/s ceiling (about 65) is the phase 1 gate |
 | Pool C (batch AI), one L4 spot | Summaries, summary translation, RAG indexing and extraction for the launch cohort; a 26B A4B int4 model processes roughly 2,000 to 3,000 input tok/s, so 100 hour-long calls ending together take several minutes | Summary p95 under 5 minutes after call end; spot reclaim delays, never drops, the job; the interactive in-call assistant (phase 3) runs on a separate non-spot replica with a priority queue |
 | LiveKit node, 4 vCPU | About 500 audio+video participants | LiveKit published benchmarks; verified in load test |
