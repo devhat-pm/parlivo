@@ -42,7 +42,7 @@ Where pins live: TypeScript in the `catalog:` block of `pnpm-workspace.yaml`; Py
 
 | Dependency         | Version | Released   | Source                                                            | Used in                                      | Note                                   |
 | ------------------ | ------- | ---------- | ----------------------------------------------------------------- | -------------------------------------------- | -------------------------------------- |
-| LiveKit server     | 1.13.10 | 2026-10-14 | [link](https://github.com/livekit/livekit/releases/tag/v1.13.10)  | infra/dev (next prompt), Helm                | Image: livekit/livekit-server:v1.13.10 |
+| LiveKit server     | 1.13.10 | 2026-10-14 | [link](https://github.com/livekit/livekit/releases/tag/v1.13.10)  | infra/dev/docker-compose.yml, Helm           | Image: livekit/livekit-server:v1.13.10 |
 | livekit-client     | 2.23.0  | 2026-10-16 | [link](https://www.npmjs.com/package/livekit-client/v/2.23.0)     | packages/realtime                            |                                        |
 | livekit-server-sdk | 2.19.2  | 2026-10-22 | [link](https://www.npmjs.com/package/livekit-server-sdk/v/2.19.2) | apps/api                                     |                                        |
 | livekit-agents     | 1.8.8   | 2026-10-15 | [link](https://pypi.org/project/livekit-agents/1.8.8/)            | services/agent                               |                                        |
@@ -84,13 +84,14 @@ Where pins live: TypeScript in the `catalog:` block of `pnpm-workspace.yaml`; Py
 
 ## Data and messaging
 
-| Dependency          | Version | Released   | Source                                                              | Used in                             | Note                                                                       |
-| ------------------- | ------- | ---------- | ------------------------------------------------------------------- | ----------------------------------- | -------------------------------------------------------------------------- |
-| PostgreSQL          | 18.6    | 2026-08-11 | [link](https://www.postgresql.org/versions.json)                    | infra/dev (next prompt), managed DB | ARCHITECTURE.md does not name a major; 18 is current                       |
-| pgvector            | 0.8.7   | 2026-10-01 | [link](https://github.com/pgvector/pgvector/tags)                   | infra/dev (next prompt)             | Image: pgvector/pgvector:0.8.7-pg18                                        |
-| Valkey              | 9.1.2   | 2026-09-01 | [link](https://github.com/valkey-io/valkey/releases/tag/9.1.2)      | infra/dev (next prompt)             | Chosen over Redis for the BSD licence, as ARCHITECTURE.md section 3 allows |
-| Redis (alternative) | 8.10.2  | 2026-09-17 | [link](https://github.com/redis/redis/releases/tag/8.10.2)          | not used                            | Recorded for reference only                                                |
-| NATS server         | 2.15.1  | 2026-10-09 | [link](https://github.com/nats-io/nats-server/releases/tag/v2.15.1) | infra/dev (next prompt)             |                                                                            |
+| Dependency          | Version | Released   | Source                                                              | Used in                                  | Note                                                                       |
+| ------------------- | ------- | ---------- | ------------------------------------------------------------------- | ---------------------------------------- | -------------------------------------------------------------------------- |
+| PostgreSQL          | 18.6    | 2026-08-11 | [link](https://www.postgresql.org/versions.json)                    | infra/dev/docker-compose.yml, managed DB | ARCHITECTURE.md does not name a major; 18 is current                       |
+| pgvector            | 0.8.7   | 2026-10-01 | [link](https://github.com/pgvector/pgvector/tags)                   | infra/dev/docker-compose.yml             | Image: pgvector/pgvector:0.8.7-pg18 (PostgreSQL 18.x inside)               |
+| Valkey              | 9.1.2   | 2026-09-01 | [link](https://github.com/valkey-io/valkey/releases/tag/9.1.2)      | infra/dev/docker-compose.yml             | Chosen over Redis for the BSD licence, as ARCHITECTURE.md section 3 allows |
+| Redis (alternative) | 8.10.2  | 2026-09-17 | [link](https://github.com/redis/redis/releases/tag/8.10.2)          | not used                                 | Recorded for reference only                                                |
+| NATS server         | 2.15.1  | 2026-10-09 | [link](https://github.com/nats-io/nats-server/releases/tag/v2.15.1) | infra/dev/docker-compose.yml             |                                                                            |
+| coturn              | 4.18.0  | 2026-09-08 | [link](https://hub.docker.com/r/coturn/coturn/tags?name=4.18.0)     | infra/dev/docker-compose.yml             | Image: coturn/coturn:4.18.0                                                |
 
 ## Tooling and tests
 

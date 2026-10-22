@@ -13,7 +13,11 @@
     "test": "turbo run test",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "py": "bash scripts/py.sh"
+    "py": "bash scripts/py.sh",
+    "dev:infra": "docker compose -f infra/dev/docker-compose.yml up -d --wait",
+    "dev:infra:down": "docker compose -f infra/dev/docker-compose.yml down",
+    "dev:infra:reset": "docker compose -f infra/dev/docker-compose.yml down -v",
+    "dev:infra:logs": "docker compose -f infra/dev/docker-compose.yml logs -f"
   },
   "devDependencies": {
     "prettier": "catalog:",
