@@ -49,7 +49,7 @@ jobs:
         working-directory: ${{ matrix.project }}
     steps:
       - uses: actions/checkout@v7.0.1
-      - uses: astral-sh/setup-uv@v10.3.1
+      - uses: astral-sh/setup-uv@v10.3.2
         with:
           version: "0.13.5"
           enable-cache: true
@@ -109,7 +109,7 @@ jobs:
       - run: pnpm --filter @parlivo/api db:migrate
       - run: pnpm --filter @parlivo/api db:seed
       - run: pnpm --filter @parlivo/api test:integration
-      - uses: astral-sh/setup-uv@v10.3.1
+      - uses: astral-sh/setup-uv@v10.3.2
         with:
           version: "0.13.5"
           enable-cache: true
