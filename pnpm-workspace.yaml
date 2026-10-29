@@ -8,15 +8,15 @@ packages:
 # Every entry is an exact pin; see docs/versions.md for dates and sources.
 catalog:
   # Frontend
-  next: 16.4.2
+  next: 16.4.3
   react: 19.3.1
   react-dom: 19.3.1
-  antd: 6.6.7
+  antd: 6.6.8
   framer-motion: 14.6.0
   tailwindcss: 4.3.3
   "@tailwindcss/postcss": 4.3.3
   zustand: 5.0.16
-  "@tanstack/react-query": 5.104.5
+  "@tanstack/react-query": 5.105.0
   # Desktop
   "@tauri-apps/cli": 2.12.4
   "@tauri-apps/api": 2.12.4
@@ -42,7 +42,7 @@ catalog:
   eslint: 10.13.0
   "@eslint/js": 10.0.1
   typescript-eslint: 8.72.0
-  "@next/eslint-plugin-next": 16.4.2
+  "@next/eslint-plugin-next": 16.4.3
   eslint-plugin-react-hooks: 7.1.1
   globals: 17.13.0
   prettier: 3.9.10
