@@ -6,4 +6,4 @@ chatterbox-tts==0.1.7
 torch==2.6.0
 # perth (the watermarker chatterbox-tts loads) imports pkg_resources, removed from
 # setuptools 81+; without it Chatterbox fails to load.
-setuptools==80.10.2
+setuptools==84.2.1
