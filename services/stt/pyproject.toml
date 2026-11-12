@@ -5,12 +5,12 @@ description = "Stateless speech-to-text on Ray Serve: faster-whisper (cpu, gpu) 
 readme = "README.md"
 requires-python = "==3.12.*"
 dependencies = [
-    "fastapi==0.159.1",
+    "fastapi==0.162.2",
     "faster-whisper==1.2.1",
     "numpy==2.5.4",
     "parlivo-schemas",
     "pydantic==2.14.1",
-    "ray[serve]==2.59.0",
+    "ray[serve]==2.60.0",
     "uvicorn==0.54.0",
 ]
 
@@ -21,8 +21,8 @@ mac = [
 ]
 # STT_MODE=gpu: CUDA 12 / cuDNN 9 runtime libraries for CTranslate2 on the L4 box.
 gpu = [
-    "nvidia-cublas-cu12==12.9.2.10; sys_platform == 'linux'",
-    "nvidia-cudnn-cu12==9.27.0.42; sys_platform == 'linux'",
+    "nvidia-cublas-cu12==12.9.3.13; sys_platform == 'linux'",
+    "nvidia-cudnn-cu12==9.28.1.4; sys_platform == 'linux'",
 ]
 
 [project.scripts]
@@ -31,13 +31,13 @@ parlivo-stt = "parlivo_stt.main:main"
 [dependency-groups]
 dev = [
     "httpx==0.28.1",
-    "mypy==2.4.0",
-    "pytest==9.1.1",
-    "ruff==0.17.1",
+    "mypy==2.4.1",
+    "pytest==9.2.0",
+    "ruff==0.17.4",
 ]
 
 [build-system]
-requires = ["uv_build==0.13.5"]
+requires = ["uv_build==0.13.7"]
 build-backend = "uv_build"
 
 [tool.uv.build-backend]

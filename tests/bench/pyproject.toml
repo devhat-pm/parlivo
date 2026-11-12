@@ -6,7 +6,7 @@ readme = "README.md"
 requires-python = "==3.12.*"
 dependencies = [
     "aiohttp==3.14.5",
-    "livekit==1.1.21",
+    "livekit==1.2.1",
     "livekit-api==1.2.2",
     "numpy==2.5.4",
     "parlivo-schemas",
@@ -18,13 +18,13 @@ parlivo-bench = "parlivo_bench.main:main"
 
 [dependency-groups]
 dev = [
-    "mypy==2.4.0",
-    "pytest==9.1.1",
-    "ruff==0.17.1",
+    "mypy==2.4.1",
+    "pytest==9.2.0",
+    "ruff==0.17.4",
 ]
 
 [build-system]
-requires = ["uv_build==0.13.5"]
+requires = ["uv_build==0.13.7"]
 build-backend = "uv_build"
 
 [tool.uv.build-backend]
