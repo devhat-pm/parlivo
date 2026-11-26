@@ -4,4 +4,4 @@
 voxcpm==2.0.3
 kokoro==0.9.4
 torch==2.14.1
-ray[serve]==2.59.0
+ray[serve]==2.60.0
